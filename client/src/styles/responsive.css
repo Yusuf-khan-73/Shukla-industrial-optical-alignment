@@ -1,0 +1,238 @@
+/**
+ * Shukla Industrial — Responsive layout & typography overrides
+ * Location: client/src/styles/responsive.css
+ *
+ * Breakpoints: 320–480 mobile | 768 tablet | 1024 laptop | 1440+ desktop
+ */
+
+/* ── Global typography & overflow ───────────────────────── */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: clamp(1.5rem, 6vw, 1.75rem);
+    word-break: break-word;
+  }
+
+  .section-subtitle {
+    font-size: var(--text-base);
+  }
+
+  .btn-magnetic {
+    font-size: var(--text-sm) !important;
+    padding: 0.75rem 1.25rem !important;
+  }
+}
+
+/* ── Hero — tablet & mobile ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero__title-line {
+    font-size: clamp(1.85rem, 5vw, 2.75rem);
+  }
+
+  .hero__desc {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__trust {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero__indicators {
+    max-width: 100%;
+  }
+
+  .hero__title-line {
+    font-size: clamp(1.75rem, 5.5vw, 2.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__title-line {
+    font-size: clamp(1.65rem, 7vw, 2rem);
+  }
+
+  .hero__tagline {
+    letter-spacing: 0.08em;
+  }
+}
+
+/* ── Home about preview ───────────────────────────────── */
+@media (max-width: 768px) {
+  .home-about-preview {
+    padding-top: var(--space-sm);
+  }
+
+  .home-about-preview__title {
+    max-width: 100%;
+  }
+
+  .home-about-preview__desc {
+    max-width: 100%;
+  }
+
+  .home-about-preview__commitment {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .home-about-preview__commitment {
+    grid-template-columns: 1fr 1fr;
+    font-size: 0.7rem;
+  }
+}
+
+/* ── Section padding scale ────────────────────────────── */
+@media (max-width: 768px) {
+  .section-padding {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .section-padding-sm {
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
+/* ── Navbar ───────────────────────────────────────────── */
+@media (max-width: 1199px) {
+  .navbar__brand-name {
+    font-size: var(--text-sm);
+  }
+
+  .navbar__logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar__inner {
+    gap: var(--space-sm);
+  }
+
+  .navbar__mobile {
+    width: min(300px, 92vw);
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+}
+
+/* ── Services / Projects / Gallery cards ──────────────── */
+@media (max-width: 768px) {
+  .services-overview__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-showcase__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: var(--space-xs);
+  }
+
+  .service-showcase__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projects-grid,
+  .gallery-grid {
+    gap: var(--space-md);
+  }
+}
+
+/* ── Testimonials ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .testimonials-carousel__loading,
+  .testimonial-skeleton,
+  .testimonial-card {
+    min-height: auto;
+  }
+
+  .testimonials__metrics {
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+}
+
+/* ── Contact ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .contact__map-wrap {
+    margin-top: var(--space-2xl);
+  }
+
+  .contact-form__title,
+  .contact-info__title {
+    font-size: var(--text-xl);
+  }
+}
+
+/* ── Footer ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .footer__bottom-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer__emergency-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer__emergency-actions {
+    width: 100%;
+  }
+
+  .footer__emergency-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .footer__map-iframe {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__emergency-btn {
+    width: 100%;
+  }
+
+  .footer__cta-card {
+    padding: var(--space-lg);
+  }
+}
+
+/* ── Floating buttons — avoid overlap on small screens ── */
+@media (max-width: 480px) {
+  .floating-buttons {
+    bottom: var(--space-md);
+    right: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .fab-button {
+    width: 46px;
+    height: 46px;
+    font-size: 1.1rem;
+  }
+}
+
+/* ── Desktop wide (1440px+) ───────────────────────────── */
+@media (min-width: 1440px) {
+  :root {
+    --container-max: 1400px;
+  }
+
+  .hero__content {
+    max-width: 780px;
+  }
+}

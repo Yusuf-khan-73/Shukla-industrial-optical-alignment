@@ -1,0 +1,251 @@
+/**
+ * Premium micro-interactions — hovers, buttons, cards (layout unchanged).
+ * Location: client/src/styles/micro-interactions.css
+ */
+
+/* ── Buttons: ripple, arrow slide, shadow ───────────────── */
+.btn-magnetic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255, 255, 255, 0.45) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.btn-magnetic:hover::after {
+  opacity: 1;
+}
+
+.btn-magnetic i.bi-arrow-right {
+  transition: transform var(--transition-base);
+}
+
+.btn-magnetic:hover i.bi-arrow-right {
+  transform: translateX(4px);
+}
+
+.btn-magnetic:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ── Navigation links ───────────────────────────────────── */
+.navbar__link {
+  transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.navbar__link:hover {
+  transform: translateY(-1px);
+}
+
+.navbar__phone,
+.navbar__cta {
+  transition: all var(--transition-base), transform var(--transition-base);
+}
+
+.navbar__phone:hover,
+.navbar__cta:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Project cards ────────────────────────────────────────── */
+.project-card__trigger {
+  transition: transform var(--transition-base);
+  border-radius: var(--radius-xl);
+}
+
+.project-card:hover .project-card__trigger {
+  transform: translateY(-6px);
+}
+
+.project-card__image img,
+.project-card .glass-card img {
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-card:hover .project-card__image img,
+.project-card:hover .glass-card img {
+  transform: scale(1.08);
+}
+
+.project-card:hover .project-card__title {
+  color: var(--color-primary-dark);
+}
+
+.project-card:hover .project-card__desc {
+  opacity: 1;
+}
+
+.project-card__body {
+  transition: box-shadow var(--transition-base);
+}
+
+.project-card:hover .project-card__body {
+  box-shadow: var(--shadow-md);
+}
+
+.project-card__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(119, 136, 115, 0.88) 0%,
+    rgba(119, 136, 115, 0.45) 55%,
+    transparent 100%
+  );
+}
+
+/* ── Service cards ──────────────────────────────────────── */
+.service-card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), background var(--transition-base);
+}
+
+.service-card:hover .service-card__title {
+  color: var(--color-primary-dark);
+}
+
+.service-card:hover .service-card__icon {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+/* ── Client cards ───────────────────────────────────────── */
+.client-card {
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.client-card:hover .client-card__name {
+  color: var(--color-accent);
+}
+
+.client-card:hover .client-card__logo {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* ── Gallery ────────────────────────────────────────────── */
+.gallery-item__trigger {
+  transition: transform var(--transition-base);
+}
+
+.gallery-item:hover .gallery-item__trigger {
+  transform: translateY(-4px);
+}
+
+.gallery-item__overlay-text {
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.gallery-item:hover .gallery-item__overlay-text {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Testimonials ───────────────────────────────────────── */
+.testimonial-card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Stats & contact cards ──────────────────────────────── */
+.home-about-preview__stat,
+.contact-info__card,
+.stat-card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.contact-info__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(161, 188, 152, 0.45);
+}
+
+.contact-info__icon {
+  transition: transform var(--transition-base), color var(--transition-base);
+}
+
+.contact-info__card:hover .contact-info__icon {
+  transform: scale(1.08);
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer__link,
+.footer-social__link {
+  transition: color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+}
+
+.footer__link:hover {
+  transform: translateX(4px);
+}
+
+.footer-social__link:hover {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.footer__emergency-btn {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.footer__emergency-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Tilt frame (about images) ──────────────────────────── */
+.tilt-frame {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow var(--transition-base);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-frame:hover {
+  box-shadow: var(--shadow-xl), 0 0 0 2px rgba(161, 188, 152, 0.35);
+}
+
+.tilt-frame img {
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter var(--transition-base);
+}
+
+.tilt-frame:hover img {
+  transform: scale(1.06);
+  filter: brightness(1.04) contrast(1.03);
+}
+
+/* ── Filter pills (projects, gallery, clients) ──────────── */
+.projects-grid__filter,
+.gallery-grid__filter,
+.clients-grid__filter {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), all var(--transition-base);
+}
+
+.projects-grid__filter:hover,
+.gallery-grid__filter:hover,
+.clients-grid__filter:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .swiper-slide-active .hero__slide-image {
+    animation: none;
+  }
+
+  .hero__progress-fill {
+    animation: none !important;
+    width: 100% !important;
+  }
+
+  .btn-magnetic:hover i.bi-arrow-right,
+  .navbar__link:hover,
+  .project-card:hover .project-card__trigger,
+  .client-card:hover,
+  .gallery-item:hover .gallery-item__trigger,
+  .testimonial-card:hover,
+  .tilt-frame:hover {
+    transform: none;
+  }
+}

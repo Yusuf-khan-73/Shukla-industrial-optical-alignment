@@ -1,0 +1,93 @@
+/**
+ * Shukla Industrial — Typography System
+ * Location: client/src/styles/typography.css
+ */
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+h1, .h1 { font-size: clamp(2.25rem, 5vw, var(--text-5xl)); font-weight: 700; letter-spacing: -0.02em; }
+h2, .h2 { font-size: clamp(1.75rem, 4vw, var(--text-4xl)); font-weight: 600; letter-spacing: -0.015em; }
+h3, .h3 { font-size: clamp(1.375rem, 3vw, var(--text-3xl)); }
+h4, .h4 { font-size: clamp(1.125rem, 2.5vw, var(--text-2xl)); }
+h5, .h5 { font-size: var(--text-xl); }
+h6, .h6 { font-size: var(--text-lg); }
+
+p {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  margin-bottom: var(--space-md);
+}
+
+p:last-child { margin-bottom: 0; }
+
+.text-body { color: var(--color-text); }
+.text-muted { color: var(--color-text-muted); }
+.text-light { color: var(--color-text-light); }
+.text-white { color: var(--color-white); }
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent { color: var(--color-accent); }
+
+.font-heading { font-family: var(--font-heading); }
+.font-body { font-family: var(--font-body); }
+
+.lead {
+  font-size: clamp(1.05rem, 2vw, var(--text-lg));
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-full);
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, var(--text-4xl));
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, var(--text-lg));
+  color: var(--color-text-muted);
+  max-width: 640px;
+}
+
+.section-dark .section-title,
+.section-dark h1,
+.section-dark h2,
+.section-dark h3 {
+  color: var(--color-white);
+}
+
+.section-dark .section-subtitle,
+.section-dark p {
+  color: var(--color-text-muted);
+}

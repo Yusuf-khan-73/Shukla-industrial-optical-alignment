@@ -1,0 +1,22 @@
+.page-hero__breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.page-hero__breadcrumb-item i {
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+.page-hero__breadcrumb-item span[aria-current] {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.page-hero__subtitle {
+  font-size: clamp(1rem, 2vw, var(--text-lg));
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 640px;
+  margin: 0;
+  line-height: 1.7;
+}

@@ -1,0 +1,169 @@
+/**
+ * Shukla Industrial — Global Entry Styles
+ * Location: client/src/index.css
+ *
+ * Imports the modular design system and applies base resets.
+ */
+
+@import './styles/variables.css';
+@import './styles/typography.css';
+@import './styles/utilities.css';
+@import './styles/animations.css';
+@import './styles/glassmorphism.css';
+@import './styles/components.css';
+@import './styles/responsive.css';
+@import './styles/aos-overrides.css';
+@import './styles/micro-interactions.css';
+
+/* ── Reset & Base ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Mobile nav open — block interaction with page content beneath menu */
+body.navbar-menu-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+body.navbar-menu-open .site-main,
+body.navbar-menu-open .footer,
+body.navbar-menu-open .floating-buttons {
+  pointer-events: none;
+}
+
+body.navbar-menu-open .floating-buttons {
+  visibility: hidden;
+}
+
+body.navbar-menu-open .scroll-progress-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* App shell (Module 1 bootstrap screen) */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.app-shell__logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--space-xl);
+  animation: float 3s ease-in-out infinite;
+}
+
+.app-shell__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.app-shell__tagline {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: var(--color-secondary);
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-xl);
+}
+
+.app-shell__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--text-sm);
+}
+
+.app-shell__status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-secondary);
+  border-radius: 50%;
+  animation: pulse-ring 1.5s ease-out infinite;
+}

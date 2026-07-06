@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+server/venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+server/logs/
+npm-debug.log*
+
+# Uploads & generated
+server/uploads/*
+!server/uploads/.gitkeep
+server/static/generated/
+
+# Build output
+client/dist/
+
+# Database backups (keep schema/seed in repo)
+database/backups/*
+!database/backups/.gitkeep
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# OS
+*.tmp
+*.temp

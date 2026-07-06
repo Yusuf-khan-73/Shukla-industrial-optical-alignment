@@ -1,0 +1,48 @@
+/**
+ * AOS visibility failsafe — loaded after aos.css via index.css
+ * Location: client/src/styles/aos-overrides.css
+ *
+ * Root cause: Lenis + AOS — [data-aos] defaults to opacity:0 until .aos-animate.
+ * If scroll sync fails, entire sections stay invisible (see HomeAboutPreview bug).
+ * Content must always be visible; motion is progressive enhancement only.
+ */
+
+body [data-aos] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body [data-aos].aos-animate {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Subtle motion when AOS does fire — no opacity hide */
+body [data-aos='fade-up']:not(.aos-animate) {
+  transform: translate3d(0, 18px, 0);
+}
+
+body [data-aos='fade-up'].aos-animate {
+  transform: translate3d(0, 0, 0);
+}
+
+body [data-aos='fade-down']:not(.aos-animate) {
+  transform: translate3d(0, -18px, 0);
+}
+
+body [data-aos='fade-right']:not(.aos-animate) {
+  transform: translate3d(-18px, 0, 0);
+}
+
+body [data-aos='fade-left']:not(.aos-animate) {
+  transform: translate3d(18px, 0, 0);
+}
+
+body [data-aos='zoom-in']:not(.aos-animate) {
+  transform: scale(0.97);
+}
+
+body [data-aos].aos-animate {
+  transform: none;
+}

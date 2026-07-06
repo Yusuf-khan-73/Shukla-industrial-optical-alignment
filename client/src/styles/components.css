@@ -1,0 +1,95 @@
+/**
+ * Shukla Industrial — Reusable Component Base Styles
+ * Location: client/src/styles/components.css
+ */
+
+.section-header { margin-bottom: var(--space-3xl); }
+.section-header--center { text-align: center; }
+.section-header--center .section-subtitle { margin-left: auto; margin-right: auto; }
+.section-header--center .section-label::before { display: none; }
+.section-header--center .section-label { justify-content: center; }
+
+.page-hero {
+  position: relative;
+  padding: calc(var(--navbar-height) + var(--space-3xl)) 0 var(--space-3xl);
+  background: var(--gradient-primary);
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(161, 188, 152, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.page-hero__title {
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+}
+
+.page-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.page-hero__breadcrumb a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.page-hero__breadcrumb a:hover { color: var(--color-accent); }
+
+.Toastify__toast {
+  font-family: var(--font-body);
+  border-radius: var(--radius-md);
+}
+
+.Toastify__toast--success { background: var(--color-primary); }
+
+.btn {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.form-control,
+.form-select {
+  font-family: var(--font-body);
+  border-radius: var(--radius-md);
+  border-color: var(--color-border);
+  padding: 0.75rem 1rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(161, 188, 152, 0.2);
+}
+
+.form-label {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.swiper-pagination-bullet {
+  background: var(--color-primary);
+  opacity: 0.3;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--color-secondary);
+  opacity: 1;
+}

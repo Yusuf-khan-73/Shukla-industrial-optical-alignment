@@ -1,0 +1,39 @@
+{
+  "name": "shukla-industrial-client",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Shukla Industrial Optical Alignment — Corporate Website Frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "aos": "^2.3.4",
+    "axios": "^1.18.1",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "framer-motion": "^12.42.2",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.25",
+    "lucide-react": "^1.23.0",
+    "react": "^19.2.7",
+    "react-countup": "^6.5.3",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.81.0",
+    "react-icons": "^5.7.0",
+    "react-intersection-observer": "^10.0.3",
+    "react-router-dom": "^7.18.1",
+    "react-toastify": "^11.1.0",
+    "swiper": "^14.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "oxlint": "^1.71.0",
+    "vite": "^8.1.1"
+  }
+}
