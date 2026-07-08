@@ -8,7 +8,8 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 
-import { NAV_LINKS, COMPANY, CONTACT } from '@utils/constants';
+import { NAV_LINKS } from '@utils/constants';
+import { useApp } from '@context/AppProvider';
 import { ROUTE_PATHS } from '@routes/routeConfig';
 import { useNavbarScroll } from '@hooks/useNavbarScroll';
 import { useIsMobile } from '@hooks/useMediaQuery';
@@ -18,7 +19,9 @@ import logo from '@assets/logo/logo.png';
 import './Navbar.css';
 
 const Navbar = () => {
+  const { company, contact } = useApp();
   const { isScrolled } = useNavbarScroll();
+  const logoSrc = company.logo || logo;
   const location = useLocation();
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -113,20 +116,6 @@ const Navbar = () => {
             </ul>
 
             <div className="navbar__mobile-footer">
-              <a href={CONTACT.primaryPhoneTel} className="navbar__mobile-contact" onClick={closeMenu}>
-                <i className="bi bi-telephone-fill" aria-hidden="true" />
-                {CONTACT.primaryPhone}
-              </a>
-              <a
-                href={CONTACT.whatsapp.fullUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="navbar__mobile-contact"
-                onClick={closeMenu}
-              >
-                <i className="bi bi-whatsapp" aria-hidden="true" />
-                WhatsApp
-              </a>
               <Link
                 to={ROUTE_PATHS.CONTACT}
                 className="navbar__cta btn-magnetic btn-primary-custom w-100 justify-content-center"
@@ -158,12 +147,12 @@ const Navbar = () => {
         <Link
           to={ROUTE_PATHS.HOME}
           className="navbar__brand"
-          aria-label={`${COMPANY.shortName} — Home`}
+          aria-label={`${company.shortName} — Home`}
           onClick={closeMenu}
         >
           <img
-            src={logo}
-            alt={COMPANY.shortName}
+            src={logoSrc}
+            alt={company.shortName}
             className="navbar__logo"
             width="120"
             height="48"
@@ -191,14 +180,6 @@ const Navbar = () => {
 
         {/* Desktop actions */}
         <div className="navbar__actions">
-          <a
-            href={CONTACT.primaryPhoneTel}
-            className="navbar__phone"
-            aria-label={`Call us at ${CONTACT.primaryPhone}`}
-          >
-            <i className="bi bi-telephone-fill" aria-hidden="true" />
-            <span>{CONTACT.primaryPhone}</span>
-          </a>
           <Link to={ROUTE_PATHS.CONTACT} className="navbar__cta btn-magnetic btn-primary-custom">
             Get a Quote
             <i className="bi bi-arrow-right" aria-hidden="true" />

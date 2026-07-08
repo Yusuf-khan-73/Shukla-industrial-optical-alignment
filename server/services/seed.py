@@ -20,12 +20,22 @@ from models.user import User
 
 
 def seed_admin(db: Session) -> None:
-    existing = db.query(User).filter(User.email == settings.admin_email).first()
-    if existing:
+    """Create the initial admin user once. Login email is owned by Company Settings thereafter."""
+    from services.admin_login import DEFAULT_ADMIN_LOGIN_EMAIL, normalize_email
+
+    company = db.query(CompanyInformation).first()
+    admin_email = normalize_email(
+        (company.admin_login_email if company else None) or settings.admin_email or DEFAULT_ADMIN_LOGIN_EMAIL
+    )
+
+    if db.query(User).filter(User.email == admin_email).first():
         return
+    if db.query(User).filter(User.is_superuser.is_(True)).first():
+        return
+
     db.add(
         User(
-            email=settings.admin_email,
+            email=admin_email,
             hashed_password=get_password_hash(settings.admin_password),
             full_name="Site Administrator",
             is_active=True,
@@ -36,30 +46,52 @@ def seed_admin(db: Session) -> None:
 
 
 def seed_company_and_settings(db: Session) -> None:
+    from services.admin_login import (
+        DEFAULT_ADMIN_LOGIN_EMAIL,
+        DEFAULT_COMPANY_NAME,
+        DEFAULT_PUBLIC_EMAIL,
+    )
+
     if not db.query(CompanyInformation).first():
         db.add(
             CompanyInformation(
-                company_name="SHUKLA INDUSTRIAL OPTICAL ALIGNMENT",
+                company_name=DEFAULT_COMPANY_NAME,
                 tagline="Precision • Accuracy • Reliability",
                 description=(
-                    "Leading provider of Industrial Optical Alignment, Machinery Installation, "
-                    "Industrial Surveying, and Paper Mill Projects across India with 18+ years "
+                    "Leading provider of Industrial Optical Alignment, Theodolite Alignment, "
+                    "Industrial Surveying, and Paper Mill Alignment Projects across India with 18+ years "
                     "of proven expertise."
                 ),
+                logo="",
+                phone_1="+91 9510900608",
+                phone_2="+91 8707305703",
                 phones=["+91 9510900608", "+91 8707305703"],
-                email="sioaw98@yahoo.com",
+                email=DEFAULT_PUBLIC_EMAIL,
+                admin_login_email=settings.admin_email or DEFAULT_ADMIN_LOGIN_EMAIL,
+                whatsapp_number="919510900608",
+                office_address="A302 Sushanti Co. Op. Housings Society Koppal Road GIDC Vapi Valsad 396195",
+                google_map_url=(
+                    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7521.4!2d72.9261012!3d20.3787777!"
+                    "2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be0ce4b2fd124cb%3A0xff6c5955d1b4310d!"
+                    "2sSushanti%20Housing%20Society!5e0!3m2!1sen!2sin!4v1"
+                ),
+                facebook="#",
+                instagram="#",
+                linkedin="#",
+                youtube="#",
                 address={
-                    "line1": "India",
-                    "city": "",
-                    "state": "",
-                    "pincode": "",
+                    "line1": "A302 Sushanti Co. Op. Housings Society",
+                    "line2": "Koppal Road GIDC Vapi",
+                    "city": "Vapi",
+                    "state": "Gujarat",
+                    "pincode": "396195",
                     "country": "India",
-                    "full": "India — Address editable via Admin Panel",
+                    "full": "A302 Sushanti Co. Op. Housings Society Koppal Road GIDC Vapi Valsad 396195",
                 },
                 working_hours={
-                    "days": "Monday - Saturday",
-                    "time": "09:00 AM - 07:00 PM",
-                    "emergency": "24x7 Emergency Support Available",
+                    "days": "Monday – Saturday",
+                    "time": "09:00 AM – 07:00 PM",
+                    "emergency": "24×7 Emergency Support Available",
                 },
                 stats=[
                     {"value": 18, "suffix": "+", "label": "Years Experience"},
@@ -69,6 +101,12 @@ def seed_company_and_settings(db: Session) -> None:
                 ],
             )
         )
+    else:
+        # Ensure existing company rows have admin_login_email populated.
+        company = db.query(CompanyInformation).first()
+        if company and not company.admin_login_email:
+            company.admin_login_email = settings.admin_email or DEFAULT_ADMIN_LOGIN_EMAIL
+            db.flush()
 
     if not db.query(SiteSettings).first():
         db.add(
@@ -88,12 +126,12 @@ def seed_company_and_settings(db: Session) -> None:
                 seo_defaults={
                     "title": "Shukla Industrial Optical Alignment | Precision • Accuracy • Reliability",
                     "description": (
-                        "18+ years of Industrial Optical Alignment, Machinery Installation, "
-                        "Industrial Surveying, and Paper Mill Projects across India."
+                        "18+ years of Industrial Optical Alignment, Theodolite Alignment, "
+                        "Industrial Surveying, and Paper Mill Alignment Projects across India."
                     ),
                     "keywords": (
-                        "industrial optical alignment, theodolite alignment, machinery installation, "
-                        "paper mill projects, laser alignment, India"
+                        "industrial optical alignment, theodolite alignment, machine alignment, "
+                        "shaft alignment, industrial surveying, precision measurement, paper mill alignment, India"
                     ),
                 },
             )
@@ -117,8 +155,8 @@ def seed_hero_slides(db: Session) -> None:
         ),
         (
             "https://images.unsplash.com/photo-1565043589221-1a6fd9f4c837?auto=format&fit=crop&w=1920&q=80",
-            "Machinery installation project",
-            "Machinery Installation & Leveling",
+            "Precision machinery alignment at industrial plant",
+            "Machine Alignment & Leveling",
         ),
     ]
     for idx, (url, alt, caption) in enumerate(slides):
@@ -176,14 +214,17 @@ def seed_services(db: Session) -> None:
         return
     services = [
         ("Industrial Optical Alignment", "industrial-optical-alignment", "bi-crosshair", True),
+        ("Precision Optical Alignment", "precision-optical-alignment", "bi-crosshair2", True),
         ("Theodolite Alignment", "theodolite-alignment", "bi-compass", True),
-        ("Machinery Installation", "machinery-installation", "bi-gear-wide-connected", True),
+        ("Machine Alignment", "machine-alignment", "bi-gear-wide-connected", True),
+        ("Shaft Alignment", "shaft-alignment", "bi-bullseye", False),
+        ("Equipment Alignment", "equipment-alignment", "bi-arrows-collapse", False),
+        ("Foundation Level Checking", "foundation-level-checking", "bi-layers", False),
         ("Industrial Surveying", "industrial-surveying", "bi-rulers", False),
-        ("Equipment Leveling", "equipment-leveling", "bi-arrows-collapse", False),
-        ("Machine Alignment", "machine-alignment", "bi-bullseye", False),
-        ("Plant Installation", "plant-installation", "bi-building-gear", False),
-        ("Laser Alignment Consultation", "laser-alignment-consultation", "bi-lightning", False),
-        ("Foundation Alignment", "foundation-alignment", "bi-layers", False),
+        ("Precision Measurement", "precision-measurement", "bi-rulers", False),
+        ("Alignment Inspection", "alignment-inspection", "bi-search", False),
+        ("Alignment Calibration", "alignment-calibration", "bi-sliders", False),
+        ("Industrial Geometry Verification", "industrial-geometry-verification", "bi-building-gear", False),
     ]
     for idx, (title, slug, icon, _featured) in enumerate(services):
         db.add(
@@ -240,19 +281,19 @@ def seed_projects(db: Session) -> None:
             ],
         },
         {
-            "title": "ITC Tribeni — Machinery Installation Project",
-            "slug": "itc-tribeni-machinery-install",
+            "title": "ITC Tribeni — Production Line Optical Alignment",
+            "slug": "itc-tribeni-production-line-alignment",
             "client": "ITC Tribeni",
             "location": "Tribeni, West Bengal",
             "industry": "paper-mill",
             "industry_label": "Paper Mill",
             "completion_date": date(2024, 6, 10),
-            "service_type": "Machinery Installation",
+            "service_type": "Precision Optical Alignment",
             "featured": True,
-            "short_description": "Turnkey machinery erection, leveling, and alignment for new production line equipment.",
-            "description": "Managed complete machinery installation including foundation bolt surveys and equipment leveling.",
+            "short_description": "Precision leveling, centerline survey, and optical alignment for new production line equipment.",
+            "description": "Executed comprehensive optical alignment including foundation bolt surveys and equipment leveling.",
             "images": [
-                ("https://images.unsplash.com/photo-1518611507436-f9221403eca8?auto=format&fit=crop&w=800&q=80", "Machinery installation at ITC Tribeni"),
+                ("https://images.unsplash.com/photo-1518611507436-f9221403eca8?auto=format&fit=crop&w=800&q=80", "Production line optical alignment at ITC Tribeni"),
             ],
         },
     ]
@@ -284,7 +325,7 @@ def seed_gallery(db: Session) -> None:
     items = [
         ("Paper Machine Roller Alignment", "JK Paper", "Songadh, Gujarat", "2024-11-10", "alignment", "Optical Alignment", True),
         ("Theodolite Centerline Survey", "Century Paper", "Kalyan, Maharashtra", "2024-08-18", "surveying", "Surveying", True),
-        ("Machinery Erection & Leveling", "ITC Tribeni", "Tribeni, West Bengal", "2024-06-05", "installation", "Installation", True),
+        ("Production Line Leveling & Alignment", "ITC Tribeni", "Tribeni, West Bengal", "2024-06-05", "alignment", "Optical Alignment", True),
     ]
     urls = [
         "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
@@ -315,7 +356,7 @@ def seed_testimonials(db: Session) -> None:
     items = [
         ("R.K. Sharma", "Plant Manager", "JK Paper", "Exceptional alignment work with precise documentation.", 5, "RS"),
         ("A. Mehta", "Maintenance Head", "Century Paper", "Reliable theodolite surveys and professional team.", 5, "AM"),
-        ("S. Banerjee", "Project Engineer", "ITC Tribeni", "On-time machinery installation with OEM tolerances met.", 5, "SB"),
+        ("S. Banerjee", "Project Engineer", "ITC Tribeni", "On-time optical alignment with all tolerances met.", 5, "SB"),
     ]
     for idx, (name, desig, company, quote, rating, initials) in enumerate(items):
         db.add(
@@ -335,8 +376,8 @@ def seed_testimonials(db: Session) -> None:
 
 
 def run_all_seeds(db: Session) -> None:
-    seed_admin(db)
     seed_company_and_settings(db)
+    seed_admin(db)
     seed_hero_slides(db)
     seed_clients(db)
     seed_services(db)

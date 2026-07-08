@@ -5,6 +5,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { uploadAdminImage } from '@api/admin';
+import { resolveImageUrl } from '@utils/resolveImageUrl';
+import { TOAST_DURATION_MS } from '@utils/toastConfig';
 
 const ImageUrlField = ({ label, value, onChange, altValue, onAltChange, showAlt = true }) => {
   const [uploading, setUploading] = useState(false);
@@ -16,9 +18,9 @@ const ImageUrlField = ({ label, value, onChange, altValue, onAltChange, showAlt 
       setUploading(true);
       const url = await uploadAdminImage(file);
       onChange(url);
-      toast.success('Image uploaded');
+      toast.success('Image uploaded', { autoClose: TOAST_DURATION_MS });
     } catch {
-      toast.error('Upload failed');
+      toast.error('Upload failed', { autoClose: TOAST_DURATION_MS });
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -30,7 +32,7 @@ const ImageUrlField = ({ label, value, onChange, altValue, onAltChange, showAlt 
       <label className="form-label">{label}</label>
       <div className="d-flex flex-wrap gap-3 align-items-start">
         {value && (
-          <img src={value} alt={altValue || label} className="admin-image-preview" />
+          <img src={resolveImageUrl(value, Date.now())} alt={altValue || label} className="admin-image-preview" />
         )}
         <div className="flex-grow-1">
           <input

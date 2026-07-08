@@ -254,7 +254,7 @@
 /* Stagger heights on larger screens for visual interest */
 @media (min-width: 992px) {
   .gallery-grid .gallery-item:nth-child(3n + 2) .gallery-item__image {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 3;
   }
 }
 

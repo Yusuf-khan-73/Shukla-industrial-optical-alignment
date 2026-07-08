@@ -14,7 +14,8 @@ const NAV = [
   { to: '/admin/testimonials', label: 'Testimonials', icon: 'bi-chat-quote' },
   { to: '/admin/contact', label: 'Contact Messages', icon: 'bi-envelope-paper' },
   { to: '/admin/hero-slides', label: 'Hero Slides', icon: 'bi-collection-play' },
-  { to: '/admin/settings', label: 'Settings', icon: 'bi-sliders' },
+  { to: '/admin/profile', label: 'My Profile', icon: 'bi-person-circle' },
+  { to: '/admin/settings', label: 'Company Settings', icon: 'bi-sliders' },
 ];
 
 const AdminSidebar = ({ onLogout }) => (

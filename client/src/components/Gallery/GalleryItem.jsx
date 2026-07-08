@@ -5,10 +5,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { formatDate } from '@utils/formatters';
+import { resolveImageUrl } from '@utils/resolveImageUrl';
 
 const GalleryItem = ({ item, index = 0, onClick }) => {
   const [loaded, setLoaded] = useState(false);
-  const imageUrl = item.image?.url;
+  const imageUrl = resolveImageUrl(
+    item.image?.url,
+    item.updated_at || item.updatedAt || item.id,
+  );
   const imageAlt = item.image?.alt || item.title;
 
   if (!imageUrl) return null;

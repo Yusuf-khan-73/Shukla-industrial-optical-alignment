@@ -4,7 +4,25 @@
  */
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+/**
+ * Resolve API base URL — dev uses direct backend (CORS) to avoid Vite proxy 404s.
+ */
+const resolveApiBaseUrl = () => {
+  const configured = import.meta.env.VITE_API_BASE_URL?.trim();
+
+  if (configured?.startsWith('http')) {
+    return configured.replace(/\/$/, '');
+  }
+
+  if (import.meta.env.DEV) {
+    const origin = import.meta.env.VITE_API_ORIGIN?.trim() || 'http://localhost:8001';
+    return `${origin.replace(/\/$/, '')}/api/v1`;
+  }
+
+  return configured || '/api/v1';
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 /**
  * Configured Axios instance with interceptors for auth and error handling.
@@ -35,11 +53,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
+    const isAuthPublicRequest = /\/auth\/(login|forgot-password|reset-password|verify-reset-token)/.test(requestUrl);
+    const onAuthPage = /^\/(admin\/(login|forgot-password|reset-password)|reset-password)/.test(window.location.pathname);
 
-    if (status === 401) {
+    if (status === 401 && !isAuthPublicRequest) {
       localStorage.removeItem('sioa_access_token');
       localStorage.removeItem('sioa_admin_user');
-      if (window.location.pathname.startsWith('/admin')) {
+      if (window.location.pathname.startsWith('/admin') && !onAuthPage) {
         window.location.href = '/admin/login';
       }
     }
@@ -48,4 +69,5 @@ apiClient.interceptors.response.use(
   }
 );
 
+export { API_BASE_URL };
 export default apiClient;

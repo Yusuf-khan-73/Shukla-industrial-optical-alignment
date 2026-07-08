@@ -22,7 +22,7 @@ const ProjectsPage = () => (
       <div className="container-custom text-center" data-aos="fade-up">
         <h2 className="section-title">Have a Project in Mind?</h2>
         <p className="section-subtitle mx-auto mb-4">
-          Discuss your alignment, installation, or surveying requirements with our engineering team.
+          Discuss your optical alignment, surveying, or precision measurement requirements with our engineering team.
           Call {CONTACT.primaryPhone} today.
         </p>
         <Link to={ROUTE_PATHS.CONTACT} className="btn-magnetic btn-primary-custom">

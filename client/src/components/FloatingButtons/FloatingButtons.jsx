@@ -4,13 +4,14 @@
  */
 import { useState, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { CONTACT } from '@utils/constants';
+import { useApp } from '@context/AppProvider';
 import { useLenisInstance } from '@context/LenisProvider';
 import { useLenisScroll } from '@hooks/useLenisScroll';
 import FabButton from './FabButton';
 import './FloatingButtons.css';
 
 const FloatingButtons = () => {
+  const { contact } = useApp();
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { lenisRef } = useLenisInstance();
 
@@ -33,9 +34,9 @@ const FloatingButtons = () => {
   return (
     <div className="floating-buttons" aria-label="Quick contact actions">
       <FabButton
-        href={CONTACT.whatsapp.fullUrl}
+        href={contact.whatsapp.fullUrl}
         icon="bi-whatsapp"
-        label="WhatsApp"
+        label="Chat on WhatsApp"
         variant="whatsapp"
         external
         pulse
@@ -43,19 +44,19 @@ const FloatingButtons = () => {
       />
 
       <FabButton
-        href={CONTACT.primaryPhoneTel}
+        href={contact.primaryPhoneTel}
         icon="bi-telephone-fill"
         label="Call Us"
         variant="call"
-        ariaLabel={`Call ${CONTACT.primaryPhone}`}
+        ariaLabel={`Call ${contact.primaryPhone}`}
       />
 
       <FabButton
-        href={CONTACT.emailMailto}
+        href={contact.emailMailto}
         icon="bi-envelope-fill"
-        label="Email"
+        label="Email Us"
         variant="email"
-        ariaLabel={`Email ${CONTACT.email}`}
+        ariaLabel={`Email ${contact.email}`}
       />
 
       <AnimatePresence>

@@ -8,10 +8,12 @@ from models.project import Project, ProjectImage
 from models.service import Service, ServiceImage
 from models.site_settings import SiteSettings
 from models.testimonial import Testimonial
+from models.password_reset import PasswordResetToken
 from models.user import User
 
 __all__ = [
     "User",
+    "PasswordResetToken",
     "Project",
     "ProjectImage",
     "Gallery",

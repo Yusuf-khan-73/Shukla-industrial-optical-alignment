@@ -6,8 +6,11 @@ import { useState } from 'react';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import useAdminCrud from '../hooks/useAdminCrud';
 import { adminTestimonials } from '@api/admin';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
 
 const emptyForm = () => ({
   name: '', designation: '', company: '', quote: '', rating: 5,
@@ -15,7 +18,12 @@ const emptyForm = () => ({
 });
 
 const TestimonialsAdminPage = () => {
-  const { items, loading, saving, create, update, remove } = useAdminCrud(adminTestimonials, { entityName: 'Testimonial' });
+  const { items, loading, saving, create, update, requestRemove, deleteConfirm } = useAdminCrud(adminTestimonials, { entityName: 'Testimonial' });
+  const table = useAdminTable(items, {
+    searchKeys: ['name', 'company', 'designation', 'quote'],
+    defaultSortKey: 'sort_order',
+    defaultSortDir: 'asc',
+  });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm());
@@ -48,7 +56,7 @@ const TestimonialsAdminPage = () => {
       render: (r) => (
         <div className="admin-actions">
           <button type="button" className="admin-btn-icon" onClick={() => openEdit(r)}><i className="bi bi-pencil" /></button>
-          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => window.confirm('Delete?') && remove(r.id)}><i className="bi bi-trash" /></button>
+          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => requestRemove(r.id)}><i className="bi bi-trash" /></button>
         </div>
       ),
     },
@@ -62,7 +70,13 @@ const TestimonialsAdminPage = () => {
         <h3 className="m-0">Testimonials</h3>
         <button type="button" className="btn btn-primary btn-sm" onClick={openCreate}><i className="bi bi-plus-lg" /> Add Testimonial</button>
       </div>
-      <div className="admin-card"><AdminTable columns={columns} rows={items} /></div>
+      <div className="admin-card">
+        <AdminTable
+          columns={columns}
+          rows={items}
+          {...buildTableProps(table, { searchPlaceholder: 'Search testimonials…' })}
+        />
+      </div>
       <AdminModal title={editing ? 'Edit Testimonial' : 'Add Testimonial'} open={open} onClose={() => setOpen(false)} footer={(
         <>
           <button type="button" className="btn btn-outline-secondary" onClick={() => setOpen(false)}>Cancel</button>
@@ -83,6 +97,7 @@ const TestimonialsAdminPage = () => {
           </div>
         </div>
       </AdminModal>
+      <AdminConfirmDelete {...deleteConfirm} />
     </div>
   );
 };

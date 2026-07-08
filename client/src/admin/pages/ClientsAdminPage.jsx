@@ -6,8 +6,11 @@ import { useState } from 'react';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import useAdminCrud from '../hooks/useAdminCrud';
 import { adminClients } from '@api/admin';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
 
 const emptyForm = () => ({
   name: '', initials: '', category: 'paper', category_label: 'Paper Mill',
@@ -15,7 +18,12 @@ const emptyForm = () => ({
 });
 
 const ClientsAdminPage = () => {
-  const { items, loading, saving, create, update, remove } = useAdminCrud(adminClients, { entityName: 'Client' });
+  const { items, loading, saving, create, update, requestRemove, deleteConfirm } = useAdminCrud(adminClients, { entityName: 'Client' });
+  const table = useAdminTable(items, {
+    searchKeys: ['name', 'category', 'category_label', 'categoryLabel'],
+    defaultSortKey: 'sort_order',
+    defaultSortDir: 'asc',
+  });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm());
@@ -50,7 +58,7 @@ const ClientsAdminPage = () => {
       render: (r) => (
         <div className="admin-actions">
           <button type="button" className="admin-btn-icon" onClick={() => openEdit(r)}><i className="bi bi-pencil" /></button>
-          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => window.confirm('Delete?') && remove(r.id)}><i className="bi bi-trash" /></button>
+          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => requestRemove(r.id)}><i className="bi bi-trash" /></button>
         </div>
       ),
     },
@@ -64,7 +72,13 @@ const ClientsAdminPage = () => {
         <h3 className="m-0">Clients</h3>
         <button type="button" className="btn btn-primary btn-sm" onClick={openCreate}><i className="bi bi-plus-lg" /> Add Client</button>
       </div>
-      <div className="admin-card"><AdminTable columns={columns} rows={items} /></div>
+      <div className="admin-card">
+        <AdminTable
+          columns={columns}
+          rows={items}
+          {...buildTableProps(table, { searchPlaceholder: 'Search clients…' })}
+        />
+      </div>
       <AdminModal title={editing ? 'Edit Client' : 'Add Client'} open={open} onClose={() => setOpen(false)} footer={(
         <>
           <button type="button" className="btn btn-outline-secondary" onClick={() => setOpen(false)}>Cancel</button>
@@ -85,6 +99,7 @@ const ClientsAdminPage = () => {
           </div>
         </div>
       </AdminModal>
+      <AdminConfirmDelete {...deleteConfirm} />
     </div>
   );
 };

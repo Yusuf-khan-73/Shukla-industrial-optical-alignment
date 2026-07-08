@@ -20,7 +20,7 @@ const Gallery = ({ variant = 'home' }) => (
         </h2>
         <p className="section-subtitle">
           {variant === 'home'
-            ? 'Industrial optical alignment, machinery installation, and paper mill project photography.'
+            ? 'Industrial optical alignment, theodolite surveying, and paper mill alignment project photography.'
             : 'Browse our portfolio — filter by category, click to enlarge with full project details.'}
         </p>
       </div>

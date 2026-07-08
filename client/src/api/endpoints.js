@@ -6,6 +6,11 @@
 export const ENDPOINTS = {
   // Auth
   LOGIN: '/auth/login',
+  FORGOT_PASSWORD: '/auth/forgot-password',
+  RESET_PASSWORD: '/auth/reset-password',
+  VERIFY_RESET_TOKEN: '/auth/verify-reset-token',
+  PROFILE: '/auth/profile',
+  CHANGE_PASSWORD: '/auth/change-password',
   REFRESH: '/auth/refresh',
   ME: '/auth/me',
 

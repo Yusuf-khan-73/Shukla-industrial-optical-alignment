@@ -9,7 +9,7 @@ const ContactPage = () => (
   <>
     <PageHero
       title="Contact Us"
-      subtitle="Get in touch for industrial optical alignment, machinery installation, and surveying services."
+      subtitle="Get in touch for industrial optical alignment, theodolite surveying, and precision measurement services."
       breadcrumbs={[{ label: 'Contact' }]}
     />
     <Contact showMap />

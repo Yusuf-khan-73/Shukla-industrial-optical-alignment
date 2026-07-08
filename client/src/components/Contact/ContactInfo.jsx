@@ -5,9 +5,21 @@
 import { useApp } from '@context/AppProvider';
 
 const ContactInfo = () => {
-  const { contact, mapLink } = useApp();
+  const { company, contact, mapLink } = useApp();
+  const { workingHours } = contact;
 
   const items = [
+    {
+      icon: 'bi-building',
+      title: 'Company Details',
+      content: (
+        <>
+          <p className="contact-info__text mb-1 fw-semibold">{company.name}</p>
+          <p className="contact-info__text mb-1">{company.tagline}</p>
+          <p className="contact-info__text">{company.description}</p>
+        </>
+      ),
+    },
     {
       icon: 'bi-geo-alt-fill',
       title: 'Office Address',
@@ -58,25 +70,31 @@ const ContactInfo = () => {
         </a>
       ),
     },
-    {
+    workingHours?.hasHours && {
       icon: 'bi-clock-fill',
       title: 'Business Hours',
       content: (
         <>
-          <p className="contact-info__text mb-1">{contact.workingHours.days}</p>
-          <p className="contact-info__text mb-1">{contact.workingHours.time}</p>
-          <p className="contact-info__emergency">{contact.workingHours.emergency}</p>
+          {workingHours.days && (
+            <p className="contact-info__text mb-1">{workingHours.days}</p>
+          )}
+          {workingHours.time && (
+            <p className="contact-info__text mb-1">{workingHours.time}</p>
+          )}
+          {workingHours.emergency && (
+            <p className="contact-info__emergency">{workingHours.emergency}</p>
+          )}
         </>
       ),
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="contact-info">
       <div className="contact-info__header" data-aos="fade-up">
         <h2 className="contact-info__title">Get In Touch</h2>
         <p className="contact-info__subtitle">
-          Reach out for industrial optical alignment, machinery installation, or surveying inquiries.
+          Reach out for industrial optical alignment, theodolite surveying, or precision measurement inquiries.
         </p>
       </div>
 

@@ -52,20 +52,27 @@ export const adminSettings = {
 };
 
 export const adminCompany = {
-  get: () => apiClient.get(ENDPOINTS.COMPANY_INFO).then((r) => r.data),
+  get: () => apiClient.get(ENDPOINTS.ADMIN_COMPANY).then((r) => r.data),
   update: (payload) => apiClient.put(ENDPOINTS.ADMIN_COMPANY, payload).then((r) => r.data),
 };
 
-export const uploadAdminImage = async (file, folder = 'images') => {
+export const uploadAdminImage = async (file, folder = 'gallery') => {
   const form = new FormData();
   form.append('file', file);
   const { data } = await apiClient.post(ENDPOINTS.ADMIN_UPLOADS, form, {
     params: { folder },
     headers: { 'Content-Type': 'multipart/form-data' },
   });
-  const base = import.meta.env.VITE_API_ORIGIN
-    || (typeof window !== 'undefined' ? window.location.origin : '');
-  return data.url.startsWith('http') ? data.url : `${base}${data.url}`;
+  // Store relative path in DB; resolve full URL at display time.
+  if (data.url?.startsWith('http')) {
+    try {
+      const parsed = new URL(data.url);
+      return parsed.pathname;
+    } catch {
+      return data.url;
+    }
+  }
+  return data.url;
 };
 
 export const adminDashboardStats = async () => {

@@ -7,49 +7,72 @@ import { toast } from 'react-toastify';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import { adminContact } from '@api/admin';
+import { formatApiError } from '@api/errors';
+import { TOAST_DURATION_MS } from '@utils/toastConfig';
 
 const ContactAdminPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterUnread, setFilterUnread] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const table = useAdminTable(items, {
+    searchKeys: ['name', 'email', 'phone', 'city', 'message', 'service_required', 'serviceRequired'],
+    dateKey: 'created_at',
+    statusKey: 'is_read',
+    defaultSortKey: 'created_at',
+    defaultSortDir: 'desc',
+  });
 
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await adminContact.list(filterUnread);
+      const data = await adminContact.list(false);
       setItems(data);
     } catch {
-      toast.error('Failed to load messages');
+      toast.error('Failed to load messages', { autoClose: TOAST_DURATION_MS });
     } finally {
       setLoading(false);
     }
-  }, [filterUnread]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
   const toggleRead = async (row) => {
     try {
       await adminContact.markRead(row.id, !row.is_read);
-      await load();
+      setItems((prev) => prev.map((item) => (
+        item.id === row.id ? { ...item, is_read: !row.is_read } : item
+      )));
       if (selected?.id === row.id) {
         setSelected((s) => ({ ...s, is_read: !row.is_read }));
       }
-    } catch {
-      toast.error('Failed to update message');
+      toast.success('Message updated', { autoClose: TOAST_DURATION_MS });
+    } catch (error) {
+      toast.error(formatApiError(error, 'Failed to update message'), { autoClose: TOAST_DURATION_MS });
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this message?')) return;
+  const confirmDelete = async () => {
+    if (pendingDeleteId == null) return;
+    const id = pendingDeleteId;
+    setDeleting(true);
     try {
       await adminContact.remove(id);
-      toast.success('Message deleted');
-      setSelected(null);
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      if (selected?.id === id) setSelected(null);
+      toast.success('Message deleted', { autoClose: TOAST_DURATION_MS });
+      setPendingDeleteId(null);
+    } catch (error) {
+      toast.error(formatApiError(error, 'Failed to delete message'), { autoClose: TOAST_DURATION_MS });
       await load();
-    } catch {
-      toast.error('Failed to delete message');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -82,7 +105,11 @@ const ContactAdminPage = () => {
           <button type="button" className="admin-btn-icon" onClick={() => toggleRead(r)} aria-label="Toggle read">
             <i className={`bi ${r.is_read ? 'bi-envelope' : 'bi-envelope-check'}`} />
           </button>
-          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => handleDelete(r.id)}>
+          <button
+            type="button"
+            className="admin-btn-icon admin-btn-icon--danger"
+            onClick={() => setPendingDeleteId(r.id)}
+          >
             <i className="bi bi-trash" />
           </button>
         </div>
@@ -96,19 +123,27 @@ const ContactAdminPage = () => {
     <div>
       <div className="admin-toolbar">
         <h3 className="m-0">Contact Messages</h3>
-        <label className="form-check m-0">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={filterUnread}
-            onChange={(e) => setFilterUnread(e.target.checked)}
-          />
-          Show unread only
-        </label>
       </div>
 
       <div className="admin-card">
-        <AdminTable columns={columns} rows={items} emptyMessage="No contact messages yet." />
+        <AdminTable
+          columns={columns}
+          rows={items}
+          emptyMessage="No contact messages yet."
+          {...buildTableProps(table, {
+            searchPlaceholder: 'Search messages…',
+            statusOptions: [
+              { value: 'all', label: 'All messages' },
+              { value: 'unread', label: 'Unread' },
+              { value: 'read', label: 'Read' },
+            ],
+            sortOptions: [
+              { key: 'created_at', dir: 'desc', label: 'Newest first' },
+              { key: 'created_at', dir: 'asc', label: 'Oldest first' },
+              { key: 'name', dir: 'asc', label: 'Name A–Z' },
+            ],
+          })}
+        />
       </div>
 
       <AdminModal
@@ -136,6 +171,13 @@ const ContactAdminPage = () => {
           </dl>
         )}
       </AdminModal>
+
+      <AdminConfirmDelete
+        open={pendingDeleteId != null}
+        onCancel={() => !deleting && setPendingDeleteId(null)}
+        onConfirm={confirmDelete}
+        loading={deleting}
+      />
     </div>
   );
 };

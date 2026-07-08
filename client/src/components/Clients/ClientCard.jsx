@@ -1,5 +1,5 @@
 /**
- * Animated client card with glassmorphism and hover effects.
+ * Client portfolio card — image, name, location, short description.
  * Location: client/src/components/Clients/ClientCard.jsx
  */
 import { motion } from 'framer-motion';
@@ -19,15 +19,24 @@ const ClientCard = ({ client, index = 0, compact = false }) => (
       aria-hidden="true"
     />
 
-    <div className="client-card__logo" style={{ '--client-hue': client.accentHue }}>
-      <span className="client-card__initials">{client.initials}</span>
+    <div className="client-card__media">
+      <img
+        src={client.image}
+        alt={client.imageAlt || client.name}
+        className="img-cover"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
 
     <h3 className="client-card__name">{client.name}</h3>
 
-    <span className={`client-card__badge client-card__badge--${client.category}`}>
-      {client.categoryLabel}
-    </span>
+    <p className="client-card__location">
+      <i className="bi bi-geo-alt" aria-hidden="true" />
+      {client.location}
+    </p>
+
+    <p className="client-card__desc">{client.shortDescription}</p>
 
     <div className="client-card__shine" aria-hidden="true" />
   </motion.article>

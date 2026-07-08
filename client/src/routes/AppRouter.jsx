@@ -12,6 +12,8 @@ import ProtectedRoute from '../admin/components/ProtectedRoute';
 import AdminLayout from '../admin/layout/AdminLayout';
 import {
   AdminLoginPage,
+  AdminForgotPasswordPage,
+  AdminResetPasswordPage,
   ADMIN_PATHS,
   adminChildRoutes,
 } from '../admin/adminRoutes';
@@ -28,6 +30,9 @@ const AppRouter = () => (
       <Routes>
         {/* Admin routes — separate from public layout */}
         <Route path={ADMIN_PATHS.LOGIN} element={<AdminLoginPage />} />
+        <Route path={ADMIN_PATHS.FORGOT_PASSWORD} element={<AdminForgotPasswordPage />} />
+        <Route path={ADMIN_PATHS.RESET_PASSWORD} element={<AdminResetPasswordPage />} />
+        <Route path="/reset-password" element={<AdminResetPasswordPage />} />
 
         <Route
           path={ADMIN_PATHS.ROOT}

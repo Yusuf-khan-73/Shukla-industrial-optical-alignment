@@ -3,7 +3,7 @@
  * Location: client/src/styles/components.css
  */
 
-.section-header { margin-bottom: var(--space-3xl); }
+.section-header { margin-bottom: var(--space-2xl); }
 .section-header--center { text-align: center; }
 .section-header--center .section-subtitle { margin-left: auto; margin-right: auto; }
 .section-header--center .section-label::before { display: none; }

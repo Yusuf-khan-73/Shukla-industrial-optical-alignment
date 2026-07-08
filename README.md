@@ -2,7 +2,7 @@
 
 
 
-> **Precision • Accuracy • Reliability** — 18+ years of Industrial Optical Alignment, Machinery Installation, and Paper Mill Projects across India.
+> **Precision • Accuracy • Reliability** — 18+ years of Industrial Optical Alignment, Theodolite Alignment, and Paper Mill Alignment Projects across India.
 
 
 

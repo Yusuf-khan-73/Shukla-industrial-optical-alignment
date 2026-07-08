@@ -66,7 +66,7 @@ const ContactForm = () => {
           </div>
 
           <div className="col-md-6">
-            <label htmlFor="phone" className="form-label">Phone Number *</label>
+            <label htmlFor="phone" className="form-label">Mobile Number *</label>
             <input
               id="phone"
               type="tel"

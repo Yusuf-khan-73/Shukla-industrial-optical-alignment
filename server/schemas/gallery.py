@@ -1,4 +1,5 @@
 """Gallery schemas."""
+from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -38,6 +39,7 @@ class GalleryPublic(BaseModel):
     category_label: str
     description: str
     featured: bool
+    updated_at: Optional[datetime] = None
     image: Optional[GalleryImageThumb] = None
     images: List[GalleryImageOut] = []
 

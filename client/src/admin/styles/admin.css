@@ -52,10 +52,45 @@
   color: var(--color-text-muted);
 }
 
+.admin-login__alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-md);
+  background: #fff5f5;
+  border: 1px solid #f5c2c7;
+  color: #842029;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.admin-login__alert i {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.admin-login__hint {
+  margin: var(--space-lg) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.admin-login__hint strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 .admin-shell {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: block;
   min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .admin-sidebar {
@@ -64,10 +99,13 @@
   padding: var(--space-lg) 0;
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 260px;
   height: 100vh;
   overflow-y: auto;
+  z-index: 100;
 }
 
 .admin-sidebar__brand {
@@ -122,6 +160,9 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin-left: 260px;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .admin-topbar {
@@ -134,7 +175,8 @@
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  flex-shrink: 0;
 }
 
 .admin-topbar h2 {
@@ -155,6 +197,8 @@
 .admin-content {
   padding: var(--space-xl);
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-card {
@@ -208,6 +252,7 @@
 
 .admin-table-wrap {
   overflow-x: auto;
+  overflow-y: visible;
 }
 
 .admin-table {
@@ -384,14 +429,145 @@
   border-bottom-color: var(--color-secondary);
 }
 
+.admin-table-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.admin-table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.admin-table-toolbar__search {
+  position: relative;
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.admin-table-toolbar__search i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.admin-table-toolbar__search input {
+  padding-left: 2.25rem;
+}
+
+.admin-table-toolbar__select,
+.admin-table-toolbar__date {
+  flex: 0 1 auto;
+  min-width: 140px;
+  max-width: 200px;
+}
+
+.admin-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-pagination__info {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.admin-pagination__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.admin-profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+}
+
+.admin-confirm-delete {
+  z-index: 1060;
+}
+
+.admin-confirm-delete__backdrop {
+  z-index: 1055;
+}
+
+.admin-confirm-delete__content {
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  animation: adminConfirmIn 0.2s ease-out;
+}
+
+@keyframes adminConfirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 575px) {
+  .admin-table-toolbar__select,
+  .admin-table-toolbar__date {
+    min-width: 100%;
+    max-width: none;
+  }
+
+  .admin-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-pagination__controls {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 991px) {
   .admin-shell {
-    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 
   .admin-sidebar {
     position: static;
+    width: 100%;
     height: auto;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    height: auto;
+    overflow: visible;
+  }
+
+  .admin-content {
+    overflow: visible;
   }
 
   .admin-form-grid {

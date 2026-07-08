@@ -5,7 +5,7 @@
 import { motion } from 'framer-motion';
 import { formatDate } from '@utils/formatters';
 
-const ProjectCard = ({ project, onClick, index = 0 }) => (
+const ProjectCard = ({ project, index = 0 }) => (
   <motion.article
     className="project-card premium-card hover-lift"
     initial={{ opacity: 0, y: 30 }}
@@ -14,24 +14,14 @@ const ProjectCard = ({ project, onClick, index = 0 }) => (
     transition={{ duration: 0.45, delay: (index % 3) * 0.08 }}
     whileHover={{ y: -6 }}
   >
-    <button
-      type="button"
-      className="project-card__trigger"
-      onClick={() => onClick(project)}
-      aria-label={`View details for ${project.title}`}
-    >
+    <div className="project-card__trigger project-card__trigger--static">
       <div className="project-card__image img-reveal">
         <img
-          src={project.images?.[0]?.url}
-          alt={project.images?.[0]?.alt || project.title}
+          src={project.images?.[0]?.url || project.images?.[0]?.image_url}
+          alt={project.images?.[0]?.alt || project.images?.[0]?.alt_text || project.title}
           className="img-cover"
           loading="lazy"
         />
-        <div className="project-card__overlay">
-          <span className="project-card__view">
-            <i className="bi bi-eye" /> View Details
-          </span>
-        </div>
         <span className="project-card__industry">{project.industryLabel}</span>
       </div>
 
@@ -47,7 +37,7 @@ const ProjectCard = ({ project, onClick, index = 0 }) => (
         <p className="project-card__desc">{project.shortDescription}</p>
         <span className="project-card__service">{project.serviceType}</span>
       </div>
-    </button>
+    </div>
   </motion.article>
 );
 

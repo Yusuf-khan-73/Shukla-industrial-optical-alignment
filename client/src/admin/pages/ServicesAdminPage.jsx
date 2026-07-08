@@ -6,9 +6,12 @@ import { useState } from 'react';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import ImageUrlField from '../components/ImageUrlField';
 import useAdminCrud from '../hooks/useAdminCrud';
 import { adminServices } from '@api/admin';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
 
 const emptyForm = () => ({
   title: '', slug: '', short_description: '', description: '', icon: 'bi-gear',
@@ -16,7 +19,12 @@ const emptyForm = () => ({
 });
 
 const ServicesAdminPage = () => {
-  const { items, loading, saving, create, update, remove } = useAdminCrud(adminServices, { entityName: 'Service' });
+  const { items, loading, saving, create, update, requestRemove, deleteConfirm } = useAdminCrud(adminServices, { entityName: 'Service' });
+  const table = useAdminTable(items, {
+    searchKeys: ['title', 'slug', 'short_description', 'shortDescription'],
+    defaultSortKey: 'sort_order',
+    defaultSortDir: 'asc',
+  });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm());
@@ -56,7 +64,7 @@ const ServicesAdminPage = () => {
       render: (r) => (
         <div className="admin-actions">
           <button type="button" className="admin-btn-icon" onClick={() => openEdit(r)}><i className="bi bi-pencil" /></button>
-          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => window.confirm('Delete?') && remove(r.id)}><i className="bi bi-trash" /></button>
+          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => requestRemove(r.id)}><i className="bi bi-trash" /></button>
         </div>
       ),
     },
@@ -70,7 +78,20 @@ const ServicesAdminPage = () => {
         <h3 className="m-0">Services</h3>
         <button type="button" className="btn btn-primary btn-sm" onClick={openCreate}><i className="bi bi-plus-lg" /> Add Service</button>
       </div>
-      <div className="admin-card"><AdminTable columns={columns} rows={items} /></div>
+      <div className="admin-card">
+        <AdminTable
+          columns={columns}
+          rows={items}
+          {...buildTableProps(table, {
+            searchPlaceholder: 'Search services…',
+            sortOptions: [
+              { key: 'sort_order', dir: 'asc', label: 'Sort order' },
+              { key: 'title', dir: 'asc', label: 'Title A–Z' },
+              { key: 'id', dir: 'desc', label: 'Newest first' },
+            ],
+          })}
+        />
+      </div>
       <AdminModal title={editing ? 'Edit Service' : 'Add Service'} open={open} onClose={() => setOpen(false)} footer={(
         <>
           <button type="button" className="btn btn-outline-secondary" onClick={() => setOpen(false)}>Cancel</button>
@@ -88,6 +109,7 @@ const ServicesAdminPage = () => {
           <label className="form-check"><input type="checkbox" className="form-check-input" checked={form.is_active} onChange={(e) => set('is_active', e.target.checked)} /> Active</label>
         </div>
       </AdminModal>
+      <AdminConfirmDelete {...deleteConfirm} />
     </div>
   );
 };

@@ -6,11 +6,9 @@ import { useState } from 'react';
 import { useProjects } from '@hooks/useProjects';
 import { PROJECT_INDUSTRIES } from './projectsData';
 import ProjectCard from './ProjectCard';
-import ProjectDetailModal from './ProjectDetailModal';
 
 const ProjectsGrid = ({ featured = false, limit = null, showFilters = false }) => {
   const [industry, setIndustry] = useState('all');
-  const [selected, setSelected] = useState(null);
   const { projects, loading } = useProjects({ featured, limit, industry });
 
   return (
@@ -43,17 +41,10 @@ const ProjectsGrid = ({ featured = false, limit = null, showFilters = false }) =
       ) : (
         <div className="projects-grid">
           {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              onClick={setSelected}
-            />
+            <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
       )}
-
-      <ProjectDetailModal project={selected} onClose={() => setSelected(null)} />
     </>
   );
 };

@@ -4,20 +4,33 @@
  */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '@context/AuthProvider';
+import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import { getLoginErrorMessage } from '@api/auth';
 import { COMPANY } from '@utils/constants';
 import logo from '@assets/logo/logo.png';
 import '../styles/admin.css';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const LoginPage = () => {
   const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [submitting, setSubmitting] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const [authError, setAuthError] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm({
     defaultValues: { email: '', password: '' },
+    mode: 'onBlur',
   });
 
   if (!loading && isAuthenticated) {
@@ -25,13 +38,37 @@ const LoginPage = () => {
   }
 
   const onSubmit = async (data) => {
+    setAuthError('');
+    clearErrors();
+
     try {
       setSubmitting(true);
-      await login(data.email, data.password);
-      toast.success('Welcome back!');
+      await login(data.email.trim(), data.password);
+      toast.success('Welcome back!', { autoClose: TOAST_DURATION_MS });
       navigate(location.state?.from || '/admin', { replace: true });
-    } catch {
-      toast.error('Invalid email or password');
+    } catch (error) {
+      const message = getLoginErrorMessage(error);
+      setAuthError(message);
+
+      if (error.response?.status === 401) {
+        setError('email', { type: 'server', message: ' ' });
+        setError('password', { type: 'server', message: 'Invalid email or password' });
+      } else if (error.response?.status === 422) {
+        const detail = error.response.data?.detail;
+        if (Array.isArray(detail)) {
+          detail.forEach((item) => {
+            const field = item.loc?.[item.loc.length - 1];
+            if (field === 'email') {
+              setError('email', { type: 'server', message: 'Enter a valid email address' });
+            }
+            if (field === 'password') {
+              setError('password', { type: 'server', message: 'Password must be at least 6 characters' });
+            }
+          });
+        }
+      }
+
+      toast.error(message, { autoClose: TOAST_DURATION_MS });
     } finally {
       setSubmitting(false);
     }
@@ -45,6 +82,13 @@ const LoginPage = () => {
           <span>Secure Admin Login</span>
         </div>
 
+        {authError && (
+          <div className="admin-login__alert" role="alert">
+            <i className="bi bi-exclamation-triangle-fill" aria-hidden="true" />
+            <span>{authError}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-3">
             <label className="form-label" htmlFor="admin-email">Email</label>
@@ -53,9 +97,18 @@ const LoginPage = () => {
               type="email"
               className={`form-control ${errors.email ? 'is-invalid' : ''}`}
               autoComplete="username"
-              {...register('email', { required: 'Email is required' })}
+              placeholder="admin@shuklaindustrial.com"
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: EMAIL_PATTERN,
+                  message: 'Enter a valid email address',
+                },
+              })}
             />
-            {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
+            {errors.email?.message?.trim() && (
+              <div className="invalid-feedback d-block">{errors.email.message}</div>
+            )}
           </div>
 
           <div className="mb-4">
@@ -65,15 +118,32 @@ const LoginPage = () => {
               type="password"
               className={`form-control ${errors.password ? 'is-invalid' : ''}`}
               autoComplete="current-password"
-              {...register('password', { required: 'Password is required' })}
+              placeholder="Enter your password"
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters',
+                },
+              })}
             />
-            {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
+            {errors.password && (
+              <div className="invalid-feedback d-block">{errors.password.message}</div>
+            )}
           </div>
 
           <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
             {submitting ? 'Signing in…' : 'Sign In'}
           </button>
+
+          <p className="text-center mt-3 mb-0">
+            <Link to="/admin/forgot-password" className="small">Forgot Password?</Link>
+          </p>
         </form>
+
+        <p className="admin-login__hint">
+          Use the Admin Login Email configured in Company Settings.
+        </p>
       </div>
     </div>
   );

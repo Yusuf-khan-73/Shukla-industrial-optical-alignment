@@ -5,6 +5,8 @@
 import { lazy } from 'react';
 
 export const AdminLoginPage = lazy(() => import('./pages/LoginPage'));
+export const AdminForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+export const AdminResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 export const AdminDashboardPage = lazy(() => import('./pages/DashboardPage'));
 export const ProjectsAdminPage = lazy(() => import('./pages/ProjectsAdminPage'));
 export const GalleryAdminPage = lazy(() => import('./pages/GalleryAdminPage'));
@@ -14,9 +16,12 @@ export const TestimonialsAdminPage = lazy(() => import('./pages/TestimonialsAdmi
 export const ContactAdminPage = lazy(() => import('./pages/ContactAdminPage'));
 export const HeroSlidesAdminPage = lazy(() => import('./pages/HeroSlidesAdminPage'));
 export const SettingsAdminPage = lazy(() => import('./pages/SettingsAdminPage'));
+export const ProfileAdminPage = lazy(() => import('./pages/ProfileAdminPage'));
 
 export const ADMIN_PATHS = {
   LOGIN: '/admin/login',
+  FORGOT_PASSWORD: '/admin/forgot-password',
+  RESET_PASSWORD: '/admin/reset-password',
   ROOT: '/admin',
   PROJECTS: '/admin/projects',
   GALLERY: '/admin/gallery',
@@ -26,6 +31,7 @@ export const ADMIN_PATHS = {
   CONTACT: '/admin/contact',
   HERO: '/admin/hero-slides',
   SETTINGS: '/admin/settings',
+  PROFILE: '/admin/profile',
 };
 
 export const adminChildRoutes = [
@@ -38,4 +44,5 @@ export const adminChildRoutes = [
   { path: 'contact', element: ContactAdminPage },
   { path: 'hero-slides', element: HeroSlidesAdminPage },
   { path: 'settings', element: SettingsAdminPage },
+  { path: 'profile', element: ProfileAdminPage },
 ];

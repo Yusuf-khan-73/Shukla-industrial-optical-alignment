@@ -56,8 +56,8 @@ export const publicRoutes = [
     meta: {
       title: `Our Services | ${SEO_DEFAULT.title.split('|')[0].trim()}`,
       description:
-        'Industrial Optical Alignment, Theodolite Alignment, Machinery Installation, Laser Alignment, and Paper Mill Projects.',
-      keywords: 'industrial optical alignment services, theodolite alignment, machinery installation',
+        'Industrial Optical Alignment, Theodolite Alignment, Machine Alignment, Shaft Alignment, and Paper Mill Alignment Projects.',
+      keywords: 'industrial optical alignment services, theodolite alignment, machine alignment, shaft alignment',
     },
   },
   {
@@ -76,7 +76,7 @@ export const publicRoutes = [
     meta: {
       title: `Gallery | ${SEO_DEFAULT.title.split('|')[0].trim()}`,
       description:
-        'Photo gallery of industrial optical alignment, machinery installation, and surveying work.',
+        'Photo gallery of industrial optical alignment, theodolite surveying, and precision measurement work.',
       keywords: 'industrial alignment gallery, paper mill photos',
     },
   },

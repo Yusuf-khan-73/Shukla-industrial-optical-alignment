@@ -56,12 +56,14 @@
   color: var(--color-accent);
 }
 
-.navbar--transparent .navbar__phone {
+.navbar--transparent .navbar__phone,
+.navbar--transparent .navbar__email {
   color: rgba(255, 255, 255, 0.9);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.navbar--transparent .navbar__phone:hover {
+.navbar--transparent .navbar__phone:hover,
+.navbar--transparent .navbar__email:hover {
   color: var(--color-secondary);
   border-color: var(--color-secondary);
 }
@@ -225,7 +227,8 @@
   }
 }
 
-.navbar__phone {
+.navbar__phone,
+.navbar__email {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
@@ -241,13 +244,15 @@
   white-space: nowrap;
 }
 
-.navbar__phone:hover {
+.navbar__phone:hover,
+.navbar__email:hover {
   color: var(--color-secondary);
   border-color: var(--color-secondary);
   box-shadow: var(--shadow-gold);
 }
 
-.navbar__phone i {
+.navbar__phone i,
+.navbar__email i {
   color: var(--color-secondary);
   font-size: 0.85rem;
 }

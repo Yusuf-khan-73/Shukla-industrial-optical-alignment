@@ -10,7 +10,7 @@ const WhyChooseUs = () => (
     <SectionHeader
       centered
       label="Why Choose Us"
-      title="The Shukla Industrial Advantage"
+      title="Industrial Optical Alignment Experts"
       subtitle="What sets us apart in industrial optical alignment and paper mill engineering."
     />
 
@@ -22,8 +22,17 @@ const WhyChooseUs = () => (
           data-aos="fade-up"
           data-aos-delay={index * 60}
         >
-          <div className="about-why__icon">
-            <i className={`bi ${item.icon}`} aria-hidden="true" />
+          <div className="about-why__media">
+            <img
+              src={item.image}
+              alt={item.imageAlt || item.title}
+              className="img-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="about-why__icon" aria-hidden="true">
+              <i className={`bi ${item.icon}`} />
+            </div>
           </div>
           <h3 className="about-why__title">{item.title}</h3>
           <p className="about-why__desc">{item.description}</p>

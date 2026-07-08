@@ -11,6 +11,13 @@ export const PROJECT_INDUSTRIES = [
   { id: 'engineering', label: 'Engineering' },
 ];
 
+import { industrialImage } from '@utils/industrialImages';
+
+const img = (n, alt) => ({
+  url: industrialImage(n - 1),
+  alt,
+});
+
 export const PROJECTS_SEED = [
   {
     id: 1,
@@ -28,14 +35,8 @@ export const PROJECTS_SEED = [
     description:
       'Executed comprehensive industrial optical alignment for JK Paper\'s manufacturing unit — covering approach system alignment, press section centerlines, dryer can alignment, and calendar stack precision. Project delivered with full as-built documentation and OEM tolerance compliance.',
     images: [
-      {
-        url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-        alt: 'JK Paper machine alignment project',
-      },
-      {
-        url: 'https://images.unsplash.com/photo-1565043589221-1a6fd9f4c837?auto=format&fit=crop&w=800&q=80',
-        alt: 'Paper machine section installation',
-      },
+      img(1, 'JK Paper machine optical alignment at paper mill'),
+      img(2, 'Paper mill production line alignment detail'),
     ],
   },
   {
@@ -53,56 +54,41 @@ export const PROJECTS_SEED = [
       'Theodolite-based centerline survey and alignment of multi-cylinder dryer section.',
     description:
       'Precision theodolite survey establishing dryer section centerlines and elevation benchmarks across 40+ cylinders. Delivered reference grid documentation for ongoing maintenance alignment programs.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80',
-        alt: 'Theodolite survey at Century Paper',
-      },
-    ],
+    images: [img(2, 'Century Paper dryer section theodolite survey')],
   },
   {
     id: 3,
-    title: 'ITC Tribeni — Machinery Installation Project',
-    slug: 'itc-tribeni-machinery-install',
+    title: 'ITC Tribeni — Production Line Optical Alignment',
+    slug: 'itc-tribeni-production-line-alignment',
     client: 'ITC Tribeni',
     location: 'Tribeni, West Bengal',
     industry: 'paper-mill',
     industryLabel: 'Paper Mill',
     completionDate: '2024-06-10',
-    serviceType: 'Machinery Installation',
+    serviceType: 'Precision Optical Alignment',
     featured: true,
     shortDescription:
-      'Turnkey machinery erection, leveling, and alignment for new production line equipment.',
+      'Precision leveling, centerline survey, and optical alignment for new production line equipment.',
     description:
-      'Managed complete machinery installation including foundation bolt surveys, equipment leveling, and integrated optical alignment for new production line components at ITC Tribeni unit.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1518611507436-f9221403eca8?auto=format&fit=crop&w=800&q=80',
-        alt: 'ITC Tribeni machinery installation',
-      },
-    ],
+      'Executed comprehensive optical alignment for ITC Tribeni\'s new production line — including foundation bolt surveys, equipment leveling, and integrated theodolite alignment for all critical components.',
+    images: [img(3, 'ITC Tribeni production line optical alignment')],
   },
   {
     id: 4,
-    title: 'Orient Paper — Plant Installation & Alignment',
-    slug: 'orient-paper-plant-install',
+    title: 'Orient Paper — Plant-Wide Alignment Project',
+    slug: 'orient-paper-plant-alignment',
     client: 'Orient Paper',
     location: 'Amlai, Madhya Pradesh',
     industry: 'paper-mill',
     industryLabel: 'Paper Mill',
     completionDate: '2023-12-05',
-    serviceType: 'Plant Installation',
+    serviceType: 'Plant Alignment',
     featured: true,
     shortDescription:
-      'Multi-discipline plant installation with precision alignment across paper machine hall.',
+      'Multi-discipline optical alignment across the paper machine hall and production line.',
     description:
-      'Coordinated plant installation project covering civil-mechanical interface, equipment positioning, and final optical alignment verification for Orient Paper\'s expanded production capacity.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
-        alt: 'Orient Paper plant installation',
-      },
-    ],
+      'Coordinated plant-wide alignment project covering civil-mechanical interface verification, equipment positioning surveys, and final optical alignment verification for Orient Paper\'s expanded production capacity.',
+    images: [img(4, 'Orient Paper plant-wide alignment project')],
   },
   {
     id: 5,
@@ -119,12 +105,7 @@ export const PROJECTS_SEED = [
       'Shaft and coupling alignment for duplex board machine drive systems.',
     description:
       'Precision machine alignment for duplex board production line including drive coupling alignment, soft foot correction, and thermal growth compensation planning.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=80',
-        alt: 'NR Agarwal duplex board alignment',
-      },
-    ],
+    images: [img(5, 'NR Agarwal duplex board machine alignment')],
   },
   {
     id: 6,
@@ -135,18 +116,13 @@ export const PROJECTS_SEED = [
     industry: 'paper-mill',
     industryLabel: 'Paper Mill',
     completionDate: '2023-09-30',
-    serviceType: 'Foundation Alignment',
+    serviceType: 'Foundation Level Checking',
     featured: true,
     shortDescription:
       'Anchor bolt pattern verification and foundation centerline surveys before equipment delivery.',
     description:
-      'Pre-installation foundation alignment survey identifying and correcting civil work deviations before critical paper machine equipment arrival — saving significant rework costs.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80',
-        alt: 'TNNPL foundation alignment survey',
-      },
-    ],
+      'Pre-delivery foundation level checking survey identifying and correcting civil work deviations before critical paper machine equipment arrival — saving significant rework costs.',
+    images: [img(6, 'TNNPL foundation and steel structure alignment survey')],
   },
   {
     id: 7,
@@ -163,12 +139,7 @@ export const PROJECTS_SEED = [
       'Complete plant layout survey and as-built documentation for expansion planning.',
     description:
       'Industrial surveying project delivering comprehensive as-built plant documentation, floor level surveys, and column grid references for West Coast Paper expansion project.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=800&q=80',
-        alt: 'West Coast Paper industrial survey',
-      },
-    ],
+    images: [img(7, 'West Coast Paper industrial surveying project')],
   },
   {
     id: 8,
@@ -185,34 +156,24 @@ export const PROJECTS_SEED = [
       'Precision leveling and alignment of packaging line converting equipment.',
     description:
       'Equipment leveling and optical alignment for packaging converting line ensuring smooth operation and reduced vibration across printing and cutting sections.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1581092795360-fd1aa04c4d26?auto=format&fit=crop&w=800&q=80',
-        alt: 'Nithya Packaging equipment alignment',
-      },
-    ],
+    images: [img(8, 'Nithya Packaging equipment leveling and alignment')],
   },
   {
     id: 9,
-    title: 'Sharma Fabricators — Heavy Equipment Erection Alignment',
-    slug: 'sharma-fabricators-erection',
+    title: 'Sharma Fabricators — Heavy Equipment Alignment Support',
+    slug: 'sharma-fabricators-alignment',
     client: 'Sharma Fabricators & Erectors',
     location: 'Pan-India',
     industry: 'engineering',
     industryLabel: 'Engineering',
     completionDate: '2023-11-08',
-    serviceType: 'Machinery Installation',
+    serviceType: 'Equipment Alignment',
     featured: false,
     shortDescription:
-      'Alignment support for heavy equipment erection projects at multiple industrial sites.',
+      'Alignment support for heavy equipment positioning projects at multiple industrial sites.',
     description:
-      'Provided precision alignment services supporting Sharma Fabricators on heavy equipment erection projects — ensuring installed machinery met strict centerline and elevation specifications.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3780?auto=format&fit=crop&w=800&q=80',
-        alt: 'Sharma Fabricators erection alignment',
-      },
-    ],
+      'Provided precision alignment services supporting Sharma Fabricators on heavy equipment positioning projects — ensuring machinery met strict centerline and elevation specifications.',
+    images: [img(9, 'Sharma Fabricators heavy equipment alignment support')],
   },
   {
     id: 10,
@@ -229,12 +190,7 @@ export const PROJECTS_SEED = [
       'Alignment methodology development and maintenance team training program.',
     description:
       'Laser alignment consultation including procedure development, tolerance specification review, and on-site training for Emami Paper maintenance engineering team.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-        alt: 'Emami Paper alignment consultation',
-      },
-    ],
+    images: [img(10, 'Emami Paper industrial alignment consultation')],
   },
 ];
 

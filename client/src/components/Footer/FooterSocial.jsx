@@ -13,14 +13,19 @@ const SOCIAL_ITEMS = [
 ];
 
 const FooterSocial = () => {
-  const { social } = useApp();
+  const { social, contact } = useApp();
+
+  const getHref = (key) => {
+    if (key === 'whatsapp') return contact.whatsapp.fullUrl;
+    return social[key] || '#';
+  };
 
   return (
     <div className="footer-social">
       {SOCIAL_ITEMS.map((item) => (
         <a
           key={item.key}
-          href={social[item.key] || '#'}
+          href={getHref(item.key)}
           className={`footer-social__link footer-social__link--${item.key}`}
           target="_blank"
           rel="noopener noreferrer"

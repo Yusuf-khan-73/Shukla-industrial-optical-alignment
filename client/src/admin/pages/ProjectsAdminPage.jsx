@@ -6,9 +6,12 @@ import { useState } from 'react';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import ImageUrlField from '../components/ImageUrlField';
 import useAdminCrud from '../hooks/useAdminCrud';
 import { adminProjects } from '@api/admin';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
 
 const emptyForm = () => ({
   title: '', slug: '', client: '', location: '', industry: 'paper-mill',
@@ -18,7 +21,13 @@ const emptyForm = () => ({
 });
 
 const ProjectsAdminPage = () => {
-  const { items, loading, saving, create, update, remove } = useAdminCrud(adminProjects, { entityName: 'Project' });
+  const { items, loading, saving, create, update, requestRemove, deleteConfirm } = useAdminCrud(adminProjects, { entityName: 'Project' });
+  const table = useAdminTable(items, {
+    searchKeys: ['title', 'client', 'location', 'service_type', 'serviceType', 'industry'],
+    dateKey: 'completion_date',
+    defaultSortKey: 'completion_date',
+    defaultSortDir: 'desc',
+  });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm());
@@ -108,7 +117,7 @@ const ProjectsAdminPage = () => {
           <button
             type="button"
             className="admin-btn-icon admin-btn-icon--danger"
-            onClick={() => window.confirm('Delete this project?') && remove(r.id)}
+            onClick={() => requestRemove(r.id)}
             aria-label="Delete"
           >
             <i className="bi bi-trash" />
@@ -130,7 +139,18 @@ const ProjectsAdminPage = () => {
       </div>
 
       <div className="admin-card">
-        <AdminTable columns={columns} rows={items} />
+        <AdminTable
+          columns={columns}
+          rows={items}
+          {...buildTableProps(table, {
+            searchPlaceholder: 'Search projects…',
+            sortOptions: [
+              { key: 'completion_date', dir: 'desc', label: 'Latest completion' },
+              { key: 'title', dir: 'asc', label: 'Title A–Z' },
+              { key: 'client', dir: 'asc', label: 'Client A–Z' },
+            ],
+          })}
+        />
       </div>
 
       <AdminModal
@@ -165,6 +185,7 @@ const ProjectsAdminPage = () => {
           </div>
         </div>
       </AdminModal>
+      <AdminConfirmDelete {...deleteConfirm} />
     </div>
   );
 };

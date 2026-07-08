@@ -41,7 +41,7 @@ export const TESTIMONIALS_SEED = [
     company: 'ITC Tribeni',
     rating: 5,
     quote:
-      'From machinery installation to final alignment, Shukla Industrial handled our expansion project with exceptional skill. They delivered on schedule and within tolerance specifications every time.',
+      'From foundation surveys to final optical alignment, Shukla Industrial handled our expansion project with exceptional skill. They delivered on schedule and within tolerance specifications every time.',
     featured: true,
     initials: getInitials('Pradeep Banerjee'),
   },
@@ -52,7 +52,7 @@ export const TESTIMONIALS_SEED = [
     company: 'Orient Paper',
     rating: 5,
     quote:
-      'We have relied on Shukla Industrial for plant installation and alignment across multiple units. Their 24x7 support during critical shutdowns has been invaluable to our operations.',
+      'We have relied on Shukla Industrial for plant-wide alignment and theodolite surveying across multiple units. Their 24x7 support during critical shutdowns has been invaluable to our operations.',
     featured: true,
     initials: getInitials('Vikram Singh'),
   },

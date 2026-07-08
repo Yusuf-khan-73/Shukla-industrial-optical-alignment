@@ -21,8 +21,8 @@ const Projects = ({ variant = 'home' }) => (
         </h2>
         <p className="section-subtitle">
           {variant === 'home'
-            ? 'A selection of precision alignment and installation projects across India\'s paper and industrial sector.'
-            : 'Explore our portfolio of industrial optical alignment, machinery installation, and surveying projects.'}
+            ? 'A selection of precision optical alignment and surveying projects across India\'s paper and industrial sector.'
+            : 'Explore our portfolio of industrial optical alignment, theodolite surveying, and precision measurement projects.'}
         </p>
         <div className="projects__stat-pill" data-aos="zoom-in">
           <i className="bi bi-trophy-fill" />

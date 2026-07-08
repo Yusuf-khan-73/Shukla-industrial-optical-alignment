@@ -2,25 +2,62 @@
  * Shukla Industrial — Application Context
  * Location: client/src/context/AppProvider.jsx
  *
- * Provides global site settings and company info.
- * Will fetch from API in later modules; uses constants as defaults for now.
+ * Fetches company info and site settings from API; falls back to constants.
  */
-import { createContext, useContext, useMemo } from 'react';
-import { COMPANY, CONTACT, SOCIAL_LINKS, MAP_EMBED_URL, MAP_LINK } from '@utils/constants';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { fetchSiteBootstrap } from '@api/site';
+import { COMPANY, CONTACT, SOCIAL_LINKS, MAP_EMBED_URL, MAP_LINK, SEO_DEFAULT } from '@utils/constants';
+import { mergeSiteData } from '@utils/siteDataMapper';
 
 const AppContext = createContext(null);
 
-export const AppProvider = ({ children, siteSettings = null }) => {
+const defaultValue = {
+  company: COMPANY,
+  contact: CONTACT,
+  social: SOCIAL_LINKS,
+  mapEmbedUrl: MAP_EMBED_URL,
+  mapLink: MAP_LINK,
+  seo: SEO_DEFAULT,
+  isLoading: true,
+};
+
+export const AppProvider = ({ children }) => {
+  const [siteData, setSiteData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchSiteBootstrap()
+      .then(({ company, settings }) => {
+        if (cancelled) return;
+        if (company || settings) {
+          setSiteData(mergeSiteData(company || {}, settings || {}));
+        }
+      })
+      .catch(() => {
+        /* Use constants fallback */
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const value = useMemo(
     () => ({
-      company: siteSettings?.company ?? COMPANY,
-      contact: siteSettings?.contact ?? CONTACT,
-      social: siteSettings?.social ?? SOCIAL_LINKS,
-      mapEmbedUrl: siteSettings?.mapEmbedUrl ?? MAP_EMBED_URL,
-      mapLink: siteSettings?.mapLink ?? MAP_LINK,
-      isLoading: false,
+      company: siteData?.company ?? COMPANY,
+      contact: siteData?.contact ?? CONTACT,
+      social: siteData?.social ?? SOCIAL_LINKS,
+      mapEmbedUrl: siteData?.mapEmbedUrl ?? MAP_EMBED_URL,
+      mapLink: siteData?.mapLink ?? MAP_LINK,
+      seo: siteData?.seo ?? SEO_DEFAULT,
+      isLoading,
     }),
-    [siteSettings]
+    [siteData, isLoading]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

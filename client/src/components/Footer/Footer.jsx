@@ -22,6 +22,7 @@ const FOOTER_QUICK_LINKS = [
 
 const Footer = () => {
   const { company, contact, mapEmbedUrl, mapLink } = useApp();
+  const logoSrc = company.logo || logo;
 
   return (
     <footer className="footer" role="contentinfo">
@@ -59,7 +60,7 @@ const Footer = () => {
           <div className="footer__brand">
             <Link to={ROUTE_PATHS.HOME} className="footer__logo-link">
               <img
-                src={logo}
+                src={logoSrc}
                 alt={company.shortName}
                 className="footer__logo"
                 width="160"
@@ -119,13 +120,20 @@ const Footer = () => {
                 <i className="bi bi-envelope-fill" aria-hidden="true" />
                 <a href={contact.emailMailto}>{contact.email}</a>
               </li>
-              <li>
-                <i className="bi bi-clock-fill" aria-hidden="true" />
-                <span>
-                  {contact.workingHours.days}<br />
-                  {contact.workingHours.time}
-                </span>
-              </li>
+              {contact.workingHours?.hasHours && (
+                <li>
+                  <i className="bi bi-clock-fill" aria-hidden="true" />
+                  <span>
+                    {contact.workingHours.days && (
+                      <>
+                        {contact.workingHours.days}
+                        {contact.workingHours.time && <br />}
+                      </>
+                    )}
+                    {contact.workingHours.time}
+                  </span>
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -11,7 +11,7 @@ export const fetchGallery = async () => {
   try {
     const { data } = await apiClient.get(ENDPOINTS.GALLERY);
     if (Array.isArray(data) && data.length > 0) return normalizeGalleryList(data);
-    if (Array.isArray(data?.items)) return normalizeGalleryList(data.items);
+    if (Array.isArray(data?.items) && data.items.length > 0) return normalizeGalleryList(data.items);
     return normalizeGalleryList(GALLERY_SEED);
   } catch {
     return normalizeGalleryList(GALLERY_SEED);

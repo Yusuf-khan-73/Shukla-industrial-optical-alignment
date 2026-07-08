@@ -27,7 +27,7 @@ const ServicesPage = () => {
     <>
       <PageHero
         title="Our Services"
-        subtitle="Comprehensive industrial alignment, installation, and surveying solutions for paper mills and manufacturing plants."
+        subtitle="Comprehensive industrial optical alignment, theodolite surveying, and precision measurement solutions for paper mills and manufacturing plants."
         breadcrumbs={[{ label: 'Services' }]}
       />
       <Services variant="full" />
@@ -36,7 +36,7 @@ const ServicesPage = () => {
         <div className="container-custom text-center" data-aos="fade-up">
           <h2 className="section-title">Need a Custom Solution?</h2>
           <p className="section-subtitle mx-auto mb-4">
-            Contact us at {CONTACT.primaryPhone} for specialized alignment and installation requirements.
+            Contact us at {CONTACT.primaryPhone} for specialized optical alignment and surveying requirements.
           </p>
           <Link to={ROUTE_PATHS.CONTACT} className="btn-magnetic btn-primary-custom">
             Contact Our Team <i className="bi bi-arrow-right" />

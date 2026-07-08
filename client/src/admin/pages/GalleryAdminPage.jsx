@@ -6,9 +6,12 @@ import { useState } from 'react';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
+import useAdminTable from '../hooks/useAdminTable';
+import { buildTableProps } from '../helpers/tableProps';
 import ImageUrlField from '../components/ImageUrlField';
 import useAdminCrud from '../hooks/useAdminCrud';
 import { adminGallery } from '@api/admin';
+import AdminConfirmDelete from '../components/AdminConfirmDelete';
 
 const emptyForm = () => ({
   title: '', company: '', location: '', date: '', category: 'alignment',
@@ -17,7 +20,13 @@ const emptyForm = () => ({
 });
 
 const GalleryAdminPage = () => {
-  const { items, loading, saving, create, update, remove } = useAdminCrud(adminGallery, { entityName: 'Gallery item' });
+  const { items, loading, saving, create, update, requestRemove, deleteConfirm } = useAdminCrud(adminGallery, { entityName: 'Gallery item' });
+  const table = useAdminTable(items, {
+    searchKeys: ['title', 'company', 'location', 'category', 'category_label', 'categoryLabel'],
+    dateKey: 'date',
+    defaultSortKey: 'sort_order',
+    defaultSortDir: 'asc',
+  });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm());
@@ -74,7 +83,7 @@ const GalleryAdminPage = () => {
       render: (r) => (
         <div className="admin-actions">
           <button type="button" className="admin-btn-icon" onClick={() => openEdit(r)}><i className="bi bi-pencil" /></button>
-          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => window.confirm('Delete?') && remove(r.id)}><i className="bi bi-trash" /></button>
+          <button type="button" className="admin-btn-icon admin-btn-icon--danger" onClick={() => requestRemove(r.id)}><i className="bi bi-trash" /></button>
         </div>
       ),
     },
@@ -88,7 +97,20 @@ const GalleryAdminPage = () => {
         <h3 className="m-0">Gallery</h3>
         <button type="button" className="btn btn-primary btn-sm" onClick={openCreate}><i className="bi bi-plus-lg" /> Add Item</button>
       </div>
-      <div className="admin-card"><AdminTable columns={columns} rows={items} /></div>
+      <div className="admin-card">
+        <AdminTable
+          columns={columns}
+          rows={items}
+          {...buildTableProps(table, {
+            searchPlaceholder: 'Search gallery…',
+            sortOptions: [
+              { key: 'date', dir: 'desc', label: 'Latest date' },
+              { key: 'title', dir: 'asc', label: 'Title A–Z' },
+              { key: 'sort_order', dir: 'asc', label: 'Sort order' },
+            ],
+          })}
+        />
+      </div>
       <AdminModal
         title={editing ? 'Edit Gallery Item' : 'Add Gallery Item'}
         open={open}
@@ -116,6 +138,7 @@ const GalleryAdminPage = () => {
           </div>
         </div>
       </AdminModal>
+      <AdminConfirmDelete {...deleteConfirm} />
     </div>
   );
 };

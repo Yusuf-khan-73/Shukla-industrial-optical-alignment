@@ -6,8 +6,8 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
-import { COMPANY, CONTACT } from '@utils/constants';
 import { ROUTE_PATHS } from '@routes/routeConfig';
+import { useApp } from '@context/AppProvider';
 import MagneticButton from './MagneticButton';
 import { useHeroSlide } from './HeroSlideContext';
 
@@ -49,6 +49,7 @@ const animateHeroContent = (root) => {
 };
 
 const HeroContent = () => {
+  const { company, contact } = useApp();
   const contentRef = useRef(null);
   const { activeIndex } = useHeroSlide();
 
@@ -69,7 +70,7 @@ const HeroContent = () => {
     <div ref={contentRef} className="hero__content">
       <div className="hero__badge">
         <span className="hero__badge-dot" aria-hidden="true" />
-        {COMPANY.experience} {COMPANY.experienceLabel}
+        {company.experience} {company.experienceLabel}
       </div>
 
       <h1 className="hero__title">
@@ -77,10 +78,10 @@ const HeroContent = () => {
         <span className="hero__title-line hero__title-line--accent">Alignment Experts</span>
       </h1>
 
-      <p className="hero__tagline">{COMPANY.tagline}</p>
+      <p className="hero__tagline">{company.tagline}</p>
 
       <p className="hero__desc">
-        Machinery Installation, Industrial Surveying &amp; Paper Mill Projects
+        Theodolite Alignment, Industrial Surveying &amp; Paper Mill Alignment
         across India — delivered with uncompromising precision.
       </p>
 
@@ -92,7 +93,7 @@ const HeroContent = () => {
           Explore Services
         </MagneticButton>
         <a
-          href={CONTACT.whatsapp.fullUrl}
+          href={contact.whatsapp.fullUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="hero__whatsapp-link"

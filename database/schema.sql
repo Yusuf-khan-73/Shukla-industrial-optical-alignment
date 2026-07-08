@@ -198,17 +198,28 @@ CREATE TABLE hero_slides (
 -- company_information (singleton)
 -- ------------------------------------------------------------
 CREATE TABLE company_information (
-    id             SERIAL PRIMARY KEY,
-    company_name   VARCHAR(255) NOT NULL,
-    tagline        VARCHAR(255) NOT NULL DEFAULT '',
-    description    TEXT NOT NULL DEFAULT '',
-    phones         JSONB DEFAULT '[]'::jsonb,
-    email          VARCHAR(255) NOT NULL DEFAULT '',
-    address        JSONB DEFAULT '{}'::jsonb,
-    working_hours  JSONB DEFAULT '{}'::jsonb,
-    stats          JSONB DEFAULT '[]'::jsonb,
-    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id               SERIAL PRIMARY KEY,
+    company_name     VARCHAR(255) NOT NULL,
+    tagline          VARCHAR(255) NOT NULL DEFAULT '',
+    description      TEXT NOT NULL DEFAULT '',
+    logo             VARCHAR(500) DEFAULT '',
+    phone_1          VARCHAR(30) DEFAULT '',
+    phone_2          VARCHAR(30) DEFAULT '',
+    phones           JSONB DEFAULT '[]'::jsonb,
+    email            VARCHAR(255) NOT NULL DEFAULT '',
+    admin_login_email VARCHAR(255) NOT NULL UNIQUE,
+    whatsapp_number  VARCHAR(20) DEFAULT '',
+    office_address   TEXT DEFAULT '',
+    google_map_url   VARCHAR(1000) DEFAULT '',
+    facebook         VARCHAR(500) DEFAULT '',
+    instagram        VARCHAR(500) DEFAULT '',
+    linkedin         VARCHAR(500) DEFAULT '',
+    youtube          VARCHAR(500) DEFAULT '',
+    address          JSONB DEFAULT '{}'::jsonb,
+    working_hours    JSONB DEFAULT '{}'::jsonb,
+    stats            JSONB DEFAULT '[]'::jsonb,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ------------------------------------------------------------
@@ -232,7 +243,7 @@ CREATE TABLE IF NOT EXISTS alembic_version (
 );
 
 INSERT INTO alembic_version (version_num)
-VALUES ('001_initial')
+VALUES ('002_company_fields')
 ON CONFLICT (version_num) DO NOTHING;
 
 COMMIT;

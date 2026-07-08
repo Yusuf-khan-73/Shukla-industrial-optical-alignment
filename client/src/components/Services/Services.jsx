@@ -23,7 +23,7 @@ const Services = ({ variant = 'home' }) => (
         </h2>
         <p className="section-subtitle">
           {variant === 'home'
-            ? 'Comprehensive optical alignment, installation, and surveying solutions for paper mills and manufacturing plants across India.'
+            ? 'Comprehensive optical alignment, theodolite surveying, and precision measurement solutions for paper mills and manufacturing plants across India.'
             : 'Every service delivered with 18+ years of expertise — description, benefits, FAQ, and direct contact for each specialty.'}
         </p>
       </div>

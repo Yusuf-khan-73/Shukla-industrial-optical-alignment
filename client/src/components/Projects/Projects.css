@@ -139,43 +139,13 @@
   color: inherit;
 }
 
+.project-card__trigger--static {
+  cursor: default;
+}
+
 .project-card__image {
   position: relative;
   aspect-ratio: 16 / 11;
-}
-
-.project-card__overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(119, 136, 115, 0.65);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.project-card:hover .project-card__overlay {
-  opacity: 1;
-}
-
-.project-card__view {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-lg);
-  background: var(--gradient-gold);
-  border-radius: var(--radius-full);
-  font-family: var(--font-heading);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--color-primary);
-  transform: translateY(8px);
-  transition: transform var(--transition-base);
-}
-
-.project-card:hover .project-card__view {
-  transform: translateY(0);
 }
 
 .project-card__industry {

@@ -5,6 +5,7 @@ Location: server/config/settings.py
 from functools import lru_cache
 from typing import List
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -36,8 +37,38 @@ class Settings(BaseSettings):
     max_upload_size_mb: int = 10
     allowed_image_types: str = "image/jpeg,image/png,image/webp,image/gif"
 
-    admin_email: str = "admin@shuklaindustrial.com"
+    admin_email: str = "yusufmohmmad7300@gmail.com"
     admin_password: str = "ChangeMe@123"
+
+    frontend_url: str = "http://localhost:5173"
+    password_reset_expire_minutes: int = 15
+    password_reset_path: str = "/reset-password"
+
+    company_name: str = "SHUKLA INDUSTRIAL OPTICAL ALIGNMENT"
+    company_phone: str = "+91 9510900608"
+    company_email: str = "sioaw98@yahoo.com"
+    company_website: str = "www.shuklaalignment.com"
+
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = Field(
+        default="",
+        validation_alias=AliasChoices("smtp_user", "SMTP_USER", "SMTP_USERNAME"),
+    )
+    smtp_password: str = ""
+    smtp_from_email: str = Field(
+        default="",
+        validation_alias=AliasChoices("smtp_from_email", "SMTP_FROM_EMAIL", "SMTP_FROM"),
+    )
+    smtp_from_name: str = Field(
+        default="",
+        validation_alias=AliasChoices("smtp_from_name", "SMTP_FROM_NAME"),
+    )
+    smtp_use_tls: bool = True
+
+    @property
+    def password_reset_url_base(self) -> str:
+        return f"{self.frontend_url.rstrip('/')}{self.password_reset_path}"
 
     @property
     def cors_origin_list(self) -> List[str]:

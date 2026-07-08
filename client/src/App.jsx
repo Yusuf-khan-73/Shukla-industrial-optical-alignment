@@ -4,6 +4,7 @@
  */
 import { useEffect } from 'react';
 import AOS from 'aos';
+import { TOAST_DURATION_MS } from '@utils/toastConfig';
 import { ToastContainer } from 'react-toastify';
 import { AppRouter } from '@routes';
 import { syncAos } from '@utils/aosSync';
@@ -37,7 +38,7 @@ function App() {
 
       <ToastContainer
         position="top-right"
-        autoClose={4000}
+        autoClose={TOAST_DURATION_MS}
         hideProgressBar={false}
         newestOnTop
         closeOnClick

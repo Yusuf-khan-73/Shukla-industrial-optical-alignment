@@ -42,6 +42,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        '/uploads': {
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
 
@@ -78,6 +83,18 @@ export default defineConfig(({ mode }) => {
     preview: {
       port: 4173,
       host: true,
+      proxy: {
+        '/api': {
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/uploads': {
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
   };
 });
