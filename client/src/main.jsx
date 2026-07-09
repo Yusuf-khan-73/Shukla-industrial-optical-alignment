@@ -13,10 +13,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
-import 'react-toastify/dist/ReactToastify.css';
 
 import './index.css';
 import App from './App.jsx';
+import NotificationContainer from './notifications/NotificationContainer';
 import { AppProvider } from '@context/AppProvider';
 import { AuthProvider } from '@context/AuthProvider';
 
@@ -25,6 +25,7 @@ createRoot(document.getElementById('root')).render(
     <AppProvider>
       <AuthProvider>
         <App />
+        <NotificationContainer />
       </AuthProvider>
     </AppProvider>
   </StrictMode>

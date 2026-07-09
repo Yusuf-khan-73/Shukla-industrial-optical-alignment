@@ -9,7 +9,7 @@ const crud = (base, byId) => ({
   list: () => apiClient.get(base).then((r) => r.data),
   create: (payload) => apiClient.post(base, payload).then((r) => r.data),
   update: (id, payload) => apiClient.put(byId(id), payload).then((r) => r.data),
-  remove: (id) => apiClient.delete(byId(id)),
+  remove: (id) => apiClient.delete(byId(id)).then((r) => r.data ?? { success: true }),
 });
 
 export const adminProjects = {
@@ -43,7 +43,8 @@ export const adminContact = {
       .then((r) => r.data),
   markRead: (id, isRead) =>
     apiClient.patch(`${ENDPOINTS.ADMIN_CONTACT}/${id}`, { is_read: isRead }).then((r) => r.data),
-  remove: (id) => apiClient.delete(`${ENDPOINTS.ADMIN_CONTACT}/${id}`),
+  remove: (id) =>
+    apiClient.delete(`${ENDPOINTS.ADMIN_CONTACT}/${id}`).then((r) => r.data ?? { success: true }),
 };
 
 export const adminSettings = {

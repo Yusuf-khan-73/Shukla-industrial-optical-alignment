@@ -3,8 +3,7 @@
  * Location: client/src/admin/pages/SettingsAdminPage.jsx
  */
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import notify from '@utils/notify';
 import PageLoader from '@components/Layout/PageLoader';
 import { adminCompany, adminSettings, uploadAdminImage } from '@api/admin';
 import { formatApiError } from '@api/errors';
@@ -78,7 +77,7 @@ const SettingsAdminPage = () => {
           youtube: companyData.youtube || siteData.social_links?.youtube || '',
         });
       })
-      .catch(() => toast.error('Failed to load settings', { autoClose: TOAST_DURATION_MS }))
+      .catch(() => notify.error('Failed to load settings'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -105,53 +104,54 @@ const SettingsAdminPage = () => {
 
   const saveCompany = async () => {
     if (!validateCompany()) {
-      toast.error('Please fix the highlighted email fields.', { autoClose: TOAST_DURATION_MS });
+      notify.error('Please fix the highlighted email fields.');
       return;
     }
 
     setSaving(true);
     try {
-      await adminCompany.update({
-        company_name: company.company_name,
-        tagline: company.tagline,
-        description: company.description,
-        logo: company.logo,
-        email: company.email.trim(),
-        admin_login_email: company.admin_login_email.trim(),
-        phone_1: company.phone_1,
-        phone_2: company.phone_2,
-        whatsapp_number: company.whatsapp_number,
-        office_address: company.office_address,
-        google_map_url: company.google_map_url,
-        facebook: company.facebook,
-        instagram: company.instagram,
-        linkedin: company.linkedin,
-        youtube: company.youtube,
-        working_hours: {
-          days: company.hours_days,
-          time: company.hours_time,
-          emergency: company.hours_emergency,
-        },
-      });
-
-      await adminSettings.update({
-        map_embed_url: company.google_map_url,
-        social_links: {
-          whatsapp: company.whatsapp_number
-            ? `https://wa.me/${company.whatsapp_number.replace(/\D/g, '')}`
-            : '',
+      await notify.run('Saving company settings...', async () => {
+        await adminCompany.update({
+          company_name: company.company_name,
+          tagline: company.tagline,
+          description: company.description,
+          logo: company.logo,
+          email: company.email.trim(),
+          admin_login_email: company.admin_login_email.trim(),
+          phone_1: company.phone_1,
+          phone_2: company.phone_2,
+          whatsapp_number: company.whatsapp_number,
+          office_address: company.office_address,
+          google_map_url: company.google_map_url,
           facebook: company.facebook,
           instagram: company.instagram,
           linkedin: company.linkedin,
           youtube: company.youtube,
-        },
-      });
+          working_hours: {
+            days: company.hours_days,
+            time: company.hours_time,
+            emergency: company.hours_emergency,
+          },
+        });
 
-      toast.success('Company settings saved', { autoClose: TOAST_DURATION_MS });
-    } catch (error) {
-      toast.error(formatApiError(error, 'Failed to save company settings'), {
-        autoClose: TOAST_DURATION_MS,
+        await adminSettings.update({
+          map_embed_url: company.google_map_url,
+          social_links: {
+            whatsapp: company.whatsapp_number
+              ? `https://wa.me/${company.whatsapp_number.replace(/\D/g, '')}`
+              : '',
+            facebook: company.facebook,
+            instagram: company.instagram,
+            linkedin: company.linkedin,
+            youtube: company.youtube,
+          },
+        });
+      }, {
+        success: 'Company settings saved successfully',
+        error: (error) => formatApiError(error, 'Failed to save company settings'),
       });
+    } catch {
+      // Error toast handled by notify.run
     } finally {
       setSaving(false);
     }
@@ -160,16 +160,18 @@ const SettingsAdminPage = () => {
   const saveSeo = async () => {
     setSaving(true);
     try {
-      await adminSettings.update({
+      await notify.run('Saving SEO settings...', () => adminSettings.update({
         seo_defaults: {
           title: seo.seo_title,
           description: seo.seo_description,
           keywords: seo.seo_keywords,
         },
+      }), {
+        success: 'SEO settings saved successfully',
+        error: 'Failed to save SEO settings',
       });
-      toast.success('SEO settings saved', { autoClose: TOAST_DURATION_MS });
     } catch {
-      toast.error('Failed to save SEO settings', { autoClose: TOAST_DURATION_MS });
+      // Error toast handled by notify.run
     } finally {
       setSaving(false);
     }
@@ -180,11 +182,13 @@ const SettingsAdminPage = () => {
     if (!file) return;
     setUploading(true);
     try {
-      const url = await uploadAdminImage(file, 'logo');
+      const url = await notify.run('Uploading logo...', () => uploadAdminImage(file, 'logo'), {
+        success: 'Logo uploaded successfully',
+        error: 'Logo upload failed',
+      });
       setCompany((c) => ({ ...c, logo: url }));
-      toast.success('Logo uploaded', { autoClose: TOAST_DURATION_MS });
     } catch {
-      toast.error('Logo upload failed', { autoClose: TOAST_DURATION_MS });
+      // Error toast handled by notify.run
     } finally {
       setUploading(false);
     }

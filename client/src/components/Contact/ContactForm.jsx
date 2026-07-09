@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import notify from '@utils/notify';
 import { SERVICES_LIST } from '@utils/constants';
 import { submitContactForm } from '@api/contact';
 
@@ -31,11 +31,13 @@ const ContactForm = () => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     try {
-      await submitContactForm(data);
-      toast.success('Thank you! Your message has been sent. We will contact you shortly.');
+      await notify.run('Sending message...', () => submitContactForm(data), {
+        success: 'Thank you! Your message has been sent. We will contact you shortly.',
+        error: 'Unable to send message. Please call us directly or try WhatsApp.',
+      });
       reset();
     } catch {
-      toast.error('Unable to send message. Please call us directly or try WhatsApp.');
+      // Error toast handled by notify.run
     } finally {
       setSubmitting(false);
     }

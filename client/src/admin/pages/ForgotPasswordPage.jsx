@@ -5,10 +5,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import notify from '@utils/notify';
 import { requestPasswordReset } from '@api/auth';
 import { formatPasswordResetError } from '@api/errors';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
 import logo from '@assets/logo/logo.png';
 import '../styles/admin.css';
 
@@ -19,16 +18,18 @@ const ForgotPasswordPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: { email: '' } });
 
   const onSubmit = async ({ email }) => {
+    const toastId = notify.loading('Sending email...');
     try {
       setSubmitting(true);
       const { message } = await requestPasswordReset(email.trim());
       setSuccessMessage(message);
       setSent(true);
-      toast.success(message || 'Email sent successfully.', { autoClose: TOAST_DURATION_MS });
+      notify.updateSuccess(toastId, message || 'Email sent successfully');
     } catch (error) {
-      toast.error(formatPasswordResetError(error, 'Unable to process request. Please try again.'), {
-        autoClose: TOAST_DURATION_MS,
-      });
+      notify.updateError(
+        toastId,
+        formatPasswordResetError(error, 'Unable to process request. Please try again.')
+      );
     } finally {
       setSubmitting(false);
     }

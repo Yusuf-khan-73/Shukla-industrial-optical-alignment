@@ -3,9 +3,8 @@
  * Location: client/src/admin/hooks/useAdminCrud.js
  */
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { formatApiError } from '@api/errors';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import notify from '@utils/notify';
 
 export const useAdminCrud = (api, { entityName = 'Record' } = {}) => {
   const [items, setItems] = useState([]);
@@ -20,7 +19,7 @@ export const useAdminCrud = (api, { entityName = 'Record' } = {}) => {
       const data = await api.list();
       setItems(Array.isArray(data) ? data : []);
     } catch {
-      toast.error(`Failed to load ${entityName.toLowerCase()}s`, { autoClose: TOAST_DURATION_MS });
+      notify.error(`Failed to load ${entityName.toLowerCase()}s`);
     } finally {
       setLoading(false);
     }
@@ -33,17 +32,20 @@ export const useAdminCrud = (api, { entityName = 'Record' } = {}) => {
   const create = async (payload) => {
     setSaving(true);
     try {
-      const created = await api.create(payload);
-      toast.success(`${entityName} created`, { autoClose: TOAST_DURATION_MS });
+      const created = await notify.run(
+        `Saving ${entityName.toLowerCase()}...`,
+        () => api.create(payload),
+        {
+          success: `${entityName} added successfully`,
+          error: (err) => formatApiError(err, `Failed to create ${entityName.toLowerCase()}`),
+        }
+      );
       if (created?.id) {
         setItems((prev) => [created, ...prev]);
       }
       await load();
       return true;
-    } catch (err) {
-      toast.error(formatApiError(err, `Failed to create ${entityName.toLowerCase()}`), {
-        autoClose: TOAST_DURATION_MS,
-      });
+    } catch {
       return false;
     } finally {
       setSaving(false);
@@ -53,17 +55,20 @@ export const useAdminCrud = (api, { entityName = 'Record' } = {}) => {
   const update = async (id, payload) => {
     setSaving(true);
     try {
-      const updated = await api.update(id, payload);
-      toast.success(`${entityName} updated`, { autoClose: TOAST_DURATION_MS });
+      const updated = await notify.run(
+        `Updating ${entityName.toLowerCase()}...`,
+        () => api.update(id, payload),
+        {
+          success: `${entityName} updated successfully`,
+          error: (err) => formatApiError(err, `Failed to update ${entityName.toLowerCase()}`),
+        }
+      );
       if (updated?.id) {
         setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...updated } : item)));
       }
       await load();
       return true;
-    } catch (err) {
-      toast.error(formatApiError(err, `Failed to update ${entityName.toLowerCase()}`), {
-        autoClose: TOAST_DURATION_MS,
-      });
+    } catch {
       return false;
     } finally {
       setSaving(false);
@@ -81,15 +86,18 @@ export const useAdminCrud = (api, { entityName = 'Record' } = {}) => {
     const id = pendingDeleteId;
     setDeleting(true);
     try {
-      await api.remove(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      toast.success(`${entityName} deleted`, { autoClose: TOAST_DURATION_MS });
+      await notify.run(
+        `Deleting ${entityName.toLowerCase()}...`,
+        () => api.remove(id),
+        {
+          success: `${entityName} deleted successfully`,
+          error: (err) => formatApiError(err, `Failed to delete ${entityName.toLowerCase()}`),
+        }
+      );
+      setItems((prev) => prev.filter((item) => String(item.id) !== String(id)));
       setPendingDeleteId(null);
       return true;
-    } catch (err) {
-      toast.error(formatApiError(err, `Failed to delete ${entityName.toLowerCase()}`), {
-        autoClose: TOAST_DURATION_MS,
-      });
+    } catch {
       await load();
       return false;
     } finally {

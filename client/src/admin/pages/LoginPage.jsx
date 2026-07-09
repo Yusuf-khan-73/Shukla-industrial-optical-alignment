@@ -5,10 +5,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useAuth } from '@context/AuthProvider';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import notify from '@utils/notify';
 import { getLoginErrorMessage } from '@api/auth';
+import { useAuth } from '@context/AuthProvider';
 import { COMPANY } from '@utils/constants';
 import logo from '@assets/logo/logo.png';
 import '../styles/admin.css';
@@ -41,13 +40,16 @@ const LoginPage = () => {
     setAuthError('');
     clearErrors();
 
+    const toastId = notify.loading('Authenticating...');
+
     try {
       setSubmitting(true);
       await login(data.email.trim(), data.password);
-      toast.success('Welcome back!', { autoClose: TOAST_DURATION_MS });
+      notify.updateSuccess(toastId, 'Login successful');
       navigate(location.state?.from || '/admin', { replace: true });
     } catch (error) {
       const message = getLoginErrorMessage(error);
+      notify.updateError(toastId, message);
       setAuthError(message);
 
       if (error.response?.status === 401) {
@@ -67,8 +69,6 @@ const LoginPage = () => {
           });
         }
       }
-
-      toast.error(message, { autoClose: TOAST_DURATION_MS });
     } finally {
       setSubmitting(false);
     }

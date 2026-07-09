@@ -3,12 +3,11 @@
  * Location: client/src/admin/pages/ProfileAdminPage.jsx
  */
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
 import PageLoader from '@components/Layout/PageLoader';
 import { changePassword, fetchCurrentUser, updateProfile } from '@api/auth';
 import { uploadAdminImage } from '@api/admin';
 import { useAuth } from '@context/AuthProvider';
+import notify from '@utils/notify';
 
 const ProfileAdminPage = () => {
   const { user } = useAuth();
@@ -34,7 +33,7 @@ const ProfileAdminPage = () => {
           profile_picture: data.profile_picture || data.profilePicture || '',
         });
       })
-      .catch(() => toast.error('Failed to load profile', { autoClose: TOAST_DURATION_MS }))
+      .catch(() => notify.error('Failed to load profile'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -44,10 +43,12 @@ const ProfileAdminPage = () => {
     setSaving(true);
     try {
       const { email: _loginEmail, ...profilePayload } = profile;
-      await updateProfile(profilePayload);
-      toast.success('Profile updated', { autoClose: TOAST_DURATION_MS });
+      await notify.run('Saving profile...', () => updateProfile(profilePayload), {
+        success: 'Profile updated successfully',
+        error: 'Failed to update profile',
+      });
     } catch {
-      toast.error('Failed to update profile', { autoClose: TOAST_DURATION_MS });
+      // Error toast handled by notify.run
     } finally {
       setSaving(false);
     }
@@ -55,16 +56,18 @@ const ProfileAdminPage = () => {
 
   const savePassword = async () => {
     if (passwords.next !== passwords.confirm) {
-      toast.error('New passwords do not match', { autoClose: TOAST_DURATION_MS });
+      notify.error('New passwords do not match');
       return;
     }
     setSaving(true);
     try {
-      await changePassword(passwords.current, passwords.next);
-      toast.success('Password changed', { autoClose: TOAST_DURATION_MS });
+      await notify.run('Updating password...', () => changePassword(passwords.current, passwords.next), {
+        success: 'Password changed successfully',
+        error: (error) => error.response?.data?.detail || 'Failed to change password',
+      });
       setPasswords({ current: '', next: '', confirm: '' });
-    } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to change password', { autoClose: TOAST_DURATION_MS });
+    } catch {
+      // Error toast handled by notify.run
     } finally {
       setSaving(false);
     }
@@ -74,11 +77,13 @@ const ProfileAdminPage = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const url = await uploadAdminImage(file, 'avatars');
+      const url = await notify.run('Uploading profile picture...', () => uploadAdminImage(file, 'avatars'), {
+        success: 'Profile picture uploaded successfully',
+        error: 'Profile picture upload failed',
+      });
       setField('profile_picture', url);
-      toast.success('Profile picture uploaded', { autoClose: TOAST_DURATION_MS });
     } catch {
-      toast.error('Upload failed', { autoClose: TOAST_DURATION_MS });
+      // Error toast handled by notify.run
     }
   };
 

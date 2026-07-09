@@ -47,13 +47,6 @@
 
 .page-hero__breadcrumb a:hover { color: var(--color-accent); }
 
-.Toastify__toast {
-  font-family: var(--font-body);
-  border-radius: var(--radius-md);
-}
-
-.Toastify__toast--success { background: var(--color-primary); }
-
 .btn {
   font-family: var(--font-heading);
   font-weight: 500;

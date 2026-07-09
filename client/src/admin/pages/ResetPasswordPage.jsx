@@ -5,10 +5,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import notify from '@utils/notify';
 import { resetPassword, verifyResetToken } from '@api/auth';
 import { formatPasswordResetError } from '@api/errors';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
 import {
   getPasswordStrength,
   isStrongPassword,
@@ -82,16 +81,12 @@ const ResetPasswordPage = () => {
         if (cancelled) return;
         setTokenValid(result.valid);
         if (!result.valid) {
-          toast.error(result.message || 'Invalid or expired reset token.', {
-            autoClose: TOAST_DURATION_MS,
-          });
+          notify.error(result.message || 'Invalid or expired reset token.');
         }
       } catch (error) {
         if (cancelled) return;
         setTokenValid(false);
-        toast.error(formatPasswordResetError(error, 'Invalid or expired reset token.'), {
-          autoClose: TOAST_DURATION_MS,
-        });
+        notify.error(formatPasswordResetError(error, 'Invalid or expired reset token.'));
       } finally {
         if (!cancelled) setVerifying(false);
       }
@@ -103,23 +98,23 @@ const ResetPasswordPage = () => {
 
   const onSubmit = async ({ password: newPassword }) => {
     if (!token || !tokenValid) {
-      toast.error('Invalid reset link. Request a new password reset.', { autoClose: TOAST_DURATION_MS });
+      notify.error('Invalid reset link. Request a new password reset.');
       return;
     }
     if (!isStrongPassword(newPassword)) {
-      toast.error(PASSWORD_REQUIREMENTS_MESSAGE, { autoClose: TOAST_DURATION_MS });
+      notify.error(PASSWORD_REQUIREMENTS_MESSAGE);
       return;
     }
 
     try {
       setSubmitting(true);
-      await resetPassword(token, newPassword);
-      setSuccess(true);
-      toast.success('Password updated successfully.', { autoClose: TOAST_DURATION_MS });
-    } catch (error) {
-      toast.error(formatPasswordResetError(error, 'Reset failed. The link may have expired.'), {
-        autoClose: TOAST_DURATION_MS,
+      await notify.run('Updating password...', () => resetPassword(token, newPassword), {
+        success: 'Password updated successfully',
+        error: (error) => formatPasswordResetError(error, 'Reset failed. The link may have expired.'),
       });
+      setSuccess(true);
+    } catch {
+      // Error toast handled by notify.run
     } finally {
       setSubmitting(false);
     }

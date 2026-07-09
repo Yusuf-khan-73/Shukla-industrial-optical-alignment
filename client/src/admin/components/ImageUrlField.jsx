@@ -3,10 +3,9 @@
  * Location: client/src/admin/components/ImageUrlField.jsx
  */
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { uploadAdminImage } from '@api/admin';
 import { resolveImageUrl } from '@utils/resolveImageUrl';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import notify from '@utils/notify';
 
 const ImageUrlField = ({ label, value, onChange, altValue, onAltChange, showAlt = true }) => {
   const [uploading, setUploading] = useState(false);
@@ -16,11 +15,13 @@ const ImageUrlField = ({ label, value, onChange, altValue, onAltChange, showAlt 
     if (!file) return;
     try {
       setUploading(true);
-      const url = await uploadAdminImage(file);
+      const url = await notify.run('Uploading image...', () => uploadAdminImage(file), {
+        success: 'Image uploaded successfully',
+        error: 'Image upload failed',
+      });
       onChange(url);
-      toast.success('Image uploaded', { autoClose: TOAST_DURATION_MS });
     } catch {
-      toast.error('Upload failed', { autoClose: TOAST_DURATION_MS });
+      // Error toast handled by notify.run
     } finally {
       setUploading(false);
       e.target.value = '';

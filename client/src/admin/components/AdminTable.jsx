@@ -39,8 +39,8 @@ const AdminTable = ({
       {!displayRows?.length ? (
         <div className="admin-empty">{emptyMessage}</div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="table admin-table">
+        <div className="table-responsive admin-table-wrap">
+          <table className="table admin-table mb-0">
             <thead>
               <tr>
                 {columns.map((col) => (

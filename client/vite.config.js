@@ -66,7 +66,7 @@ export default defineConfig(({ mode }) => {
               if (id.includes('framer-motion') || id.includes('gsap') || id.includes('aos')) {
                 return 'animation';
               }
-              if (id.includes('bootstrap') || id.includes('swiper') || id.includes('react-toastify')) {
+              if (id.includes('bootstrap') || id.includes('swiper')) {
                 return 'ui';
               }
             }

@@ -3,7 +3,6 @@
  * Location: client/src/admin/pages/ContactAdminPage.jsx
  */
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import PageLoader from '@components/Layout/PageLoader';
 import AdminModal from '../components/AdminModal';
 import AdminTable from '../components/AdminTable';
@@ -12,7 +11,7 @@ import useAdminTable from '../hooks/useAdminTable';
 import { buildTableProps } from '../helpers/tableProps';
 import { adminContact } from '@api/admin';
 import { formatApiError } from '@api/errors';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
+import notify from '@utils/notify';
 
 const ContactAdminPage = () => {
   const [items, setItems] = useState([]);
@@ -35,7 +34,7 @@ const ContactAdminPage = () => {
       const data = await adminContact.list(false);
       setItems(data);
     } catch {
-      toast.error('Failed to load messages', { autoClose: TOAST_DURATION_MS });
+      notify.error('Failed to load messages');
     } finally {
       setLoading(false);
     }
@@ -45,16 +44,18 @@ const ContactAdminPage = () => {
 
   const toggleRead = async (row) => {
     try {
-      await adminContact.markRead(row.id, !row.is_read);
+      await notify.run('Updating message...', () => adminContact.markRead(row.id, !row.is_read), {
+        success: 'Message updated successfully',
+        error: (error) => formatApiError(error, 'Failed to update message'),
+      });
       setItems((prev) => prev.map((item) => (
         item.id === row.id ? { ...item, is_read: !row.is_read } : item
       )));
       if (selected?.id === row.id) {
         setSelected((s) => ({ ...s, is_read: !row.is_read }));
       }
-      toast.success('Message updated', { autoClose: TOAST_DURATION_MS });
-    } catch (error) {
-      toast.error(formatApiError(error, 'Failed to update message'), { autoClose: TOAST_DURATION_MS });
+    } catch {
+      // Error toast handled by notify.run
     }
   };
 
@@ -63,13 +64,14 @@ const ContactAdminPage = () => {
     const id = pendingDeleteId;
     setDeleting(true);
     try {
-      await adminContact.remove(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      await notify.run('Deleting message...', () => adminContact.remove(id), {
+        success: 'Message deleted successfully',
+        error: (error) => formatApiError(error, 'Failed to delete message'),
+      });
+      setItems((prev) => prev.filter((item) => String(item.id) !== String(id)));
       if (selected?.id === id) setSelected(null);
-      toast.success('Message deleted', { autoClose: TOAST_DURATION_MS });
       setPendingDeleteId(null);
-    } catch (error) {
-      toast.error(formatApiError(error, 'Failed to delete message'), { autoClose: TOAST_DURATION_MS });
+    } catch {
       await load();
     } finally {
       setDeleting(false);

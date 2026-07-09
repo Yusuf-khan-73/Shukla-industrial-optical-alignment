@@ -4,8 +4,6 @@
  */
 import { useEffect } from 'react';
 import AOS from 'aos';
-import { TOAST_DURATION_MS } from '@utils/toastConfig';
-import { ToastContainer } from 'react-toastify';
 import { AppRouter } from '@routes';
 import { syncAos } from '@utils/aosSync';
 
@@ -32,21 +30,7 @@ function App() {
     };
   }, []);
 
-  return (
-    <>
-      <AppRouter />
-
-      <ToastContainer
-        position="top-right"
-        autoClose={TOAST_DURATION_MS}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        theme="colored"
-      />
-    </>
-  );
+  return <AppRouter />;
 }
 
 export default App;
