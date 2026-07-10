@@ -22,6 +22,7 @@ class ContactResponse(BaseModel):
 
     id: int
     message: str = "Thank you! Your inquiry has been received. We will contact you shortly."
+    inquiry_number: Optional[str] = None
 
 
 class ContactMessageAdmin(BaseModel):
@@ -37,6 +38,9 @@ class ContactMessageAdmin(BaseModel):
     message: str
     is_read: bool
     created_at: datetime
+    inquiry_number: Optional[str] = None
+    admin_email_sent: bool = False
+    customer_email_sent: bool = False
 
 
 class ContactReadUpdate(BaseModel):

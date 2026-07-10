@@ -164,21 +164,26 @@ CREATE TABLE testimonials (
 -- contact_messages
 -- ------------------------------------------------------------
 CREATE TABLE contact_messages (
-    id               SERIAL PRIMARY KEY,
-    name             VARCHAR(255) NOT NULL,
-    phone            VARCHAR(50) NOT NULL,
-    email            VARCHAR(255) NOT NULL,
-    company_name     VARCHAR(255) NOT NULL DEFAULT '',
-    city             VARCHAR(255) NOT NULL DEFAULT '',
-    service_required VARCHAR(255) NOT NULL DEFAULT '',
-    message          TEXT NOT NULL,
-    is_read          BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id                   SERIAL PRIMARY KEY,
+    name                 VARCHAR(255) NOT NULL,
+    phone                VARCHAR(50) NOT NULL,
+    email                VARCHAR(255) NOT NULL,
+    company_name         VARCHAR(255) NOT NULL DEFAULT '',
+    city                 VARCHAR(255) NOT NULL DEFAULT '',
+    service_required     VARCHAR(255) NOT NULL DEFAULT '',
+    message              TEXT NOT NULL,
+    is_read              BOOLEAN NOT NULL DEFAULT FALSE,
+    inquiry_number       VARCHAR(50),
+    admin_email_sent     BOOLEAN NOT NULL DEFAULT FALSE,
+    customer_email_sent  BOOLEAN NOT NULL DEFAULT FALSE,
+    email_error          TEXT,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX ix_contact_messages_is_read ON contact_messages (is_read);
 CREATE INDEX ix_contact_messages_created_at ON contact_messages (created_at DESC);
+CREATE UNIQUE INDEX ix_contact_messages_inquiry_number ON contact_messages (inquiry_number);
 
 -- ------------------------------------------------------------
 -- hero_slides

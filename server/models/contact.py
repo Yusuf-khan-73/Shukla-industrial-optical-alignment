@@ -1,4 +1,6 @@
 """Contact form message model."""
+from typing import Optional
+
 from sqlalchemy import Boolean, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -17,3 +19,11 @@ class ContactMessage(Base, TimestampMixin):
     service_required: Mapped[str] = mapped_column(String(255), nullable=False, default="")
     message: Mapped[str] = mapped_column(Text, nullable=False)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    # --- Inquiry tracking / email notification metadata (additive, non-breaking) ---
+    inquiry_number: Mapped[Optional[str]] = mapped_column(
+        String(50), nullable=True, unique=True, index=True, default=None
+    )
+    admin_email_sent: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    customer_email_sent: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    email_error: Mapped[Optional[str]] = mapped_column(Text, nullable=True, default=None)

@@ -2,14 +2,16 @@
 Application settings loaded from environment variables.
 Location: server/config/settings.py
 """
+
 from functools import lru_cache
 from typing import List
 
-from pydantic import AliasChoices, Field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -20,68 +22,160 @@ class Settings(BaseSettings):
     app_name: str = "Shukla Industrial Optical Alignment API"
     app_env: str = "development"
     debug: bool = True
+
     api_v1_prefix: str = "/api/v1"
 
     host: str = "0.0.0.0"
     port: int = 8000
 
-    database_url: str = "postgresql://shukla_user:shukla_pass@localhost:5432/shukla_industrial"
 
-    secret_key: str = "change-this-to-a-long-random-secret-key-in-production"
+    # DATABASE
+
+    database_url: str = ""
+
+
+    # JWT
+
+    secret_key: str = ""
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
 
-    cors_origins: str = "http://localhost:5173,http://localhost:3000"
+
+    # CORS
+
+    cors_origins: str = ""
+
+
+    # Upload
 
     upload_dir: str = "uploads"
-    max_upload_size_mb: int = 10
-    allowed_image_types: str = "image/jpeg,image/png,image/webp,image/gif"
 
-    admin_email: str = "yusufmohmmad7300@gmail.com"
-    admin_password: str = "ChangeMe@123"
+    max_upload_size_mb: int = 10
+
+    allowed_image_types: str = (
+        "image/jpeg,image/png,image/webp,image/gif"
+    )
+
+
+    # ADMIN
+
+    admin_email: str = ""
+
+    admin_password: str = ""
+
+
+    # FRONTEND
 
     frontend_url: str = "http://localhost:5173"
+
+
     password_reset_expire_minutes: int = 15
+
     password_reset_path: str = "/reset-password"
 
-    company_name: str = "SHUKLA INDUSTRIAL OPTICAL ALIGNMENT"
+
+
+    # COMPANY
+
+    company_name: str = (
+        "SHUKLA INDUSTRIAL OPTICAL ALIGNMENT"
+    )
+
     company_phone: str = "+91 9510900608"
+
     company_email: str = "sioaw98@yahoo.com"
+
     company_website: str = "www.shuklaalignment.com"
 
-    smtp_host: str = ""
+
+
+    # ==========================
+    # SMTP SETTINGS
+    # ==========================
+
+
+    smtp_host: str = "smtp.gmail.com"
+
     smtp_port: int = 587
+
+
     smtp_user: str = Field(
         default="",
-        validation_alias=AliasChoices("smtp_user", "SMTP_USER", "SMTP_USERNAME"),
+        validation_alias="SMTP_USERNAME"
     )
-    smtp_password: str = ""
+
+
+    smtp_password: str = Field(
+        default="",
+        validation_alias="SMTP_PASSWORD"
+    )
+
+
     smtp_from_email: str = Field(
         default="",
-        validation_alias=AliasChoices("smtp_from_email", "SMTP_FROM_EMAIL", "SMTP_FROM"),
+        validation_alias="SMTP_FROM_EMAIL"
     )
+
+
     smtp_from_name: str = Field(
         default="",
-        validation_alias=AliasChoices("smtp_from_name", "SMTP_FROM_NAME"),
+        validation_alias="SMTP_FROM_NAME"
     )
+
+
     smtp_use_tls: bool = True
 
-    @property
-    def password_reset_url_base(self) -> str:
-        return f"{self.frontend_url.rstrip('/')}{self.password_reset_path}"
+    smtp_use_ssl: bool = False
+
+
+
+    admin_dashboard_path: str = "/admin"
+
+
 
     @property
-    def cors_origin_list(self) -> List[str]:
-        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+    def password_reset_url_base(self):
+        return (
+            f"{self.frontend_url.rstrip('/')}"
+            f"{self.password_reset_path}"
+        )
+
 
     @property
-    def allowed_image_type_list(self) -> List[str]:
-        return [t.strip() for t in self.allowed_image_types.split(",") if t.strip()]
+    def admin_dashboard_url(self):
+
+        return (
+            f"{self.frontend_url.rstrip('/')}"
+            f"{self.admin_dashboard_path}"
+        )
+
+
+    @property
+    def cors_origin_list(self)->List[str]:
+
+        return [
+            x.strip()
+            for x in self.cors_origins.split(",")
+            if x.strip()
+        ]
+
+
+    @property
+    def allowed_image_type_list(self):
+
+        return [
+            x.strip()
+            for x in self.allowed_image_types.split(",")
+            if x.strip()
+        ]
+
 
 
 @lru_cache
-def get_settings() -> Settings:
+def get_settings():
+
     return Settings()
+
 
 
 settings = get_settings()
