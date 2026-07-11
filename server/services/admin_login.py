@@ -7,10 +7,11 @@ from sqlalchemy.orm import Session
 
 from models.company import CompanyInformation
 from models.user import User
+from config.settings import settings
 
+DEFAULT_PUBLIC_EMAIL = settings.company_email
 
-DEFAULT_PUBLIC_EMAIL = "sioaw98@yahoo.com"
-DEFAULT_ADMIN_LOGIN_EMAIL = "yusufmohmmad7300@gmail.com"
+DEFAULT_ADMIN_LOGIN_EMAIL = settings.admin_email
 DEFAULT_COMPANY_NAME = "SHUKLA INDUSTRIAL OPTICAL ALIGNMENT"
 
 
