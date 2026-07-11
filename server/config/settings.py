@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     company_phone: str = "+91 9510900608"
 
     company_email: str = ""
+
     company_website: str = "www.shuklaalignment.com"
 
 

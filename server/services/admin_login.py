@@ -5,12 +5,12 @@ Location: server/services/admin_login.py
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from config.settings import settings
 from models.company import CompanyInformation
 from models.user import User
-from config.settings import settings
+
 
 DEFAULT_PUBLIC_EMAIL = settings.company_email
-
 DEFAULT_ADMIN_LOGIN_EMAIL = settings.admin_email
 DEFAULT_COMPANY_NAME = "SHUKLA INDUSTRIAL OPTICAL ALIGNMENT"
 
