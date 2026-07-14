@@ -1,12 +1,8 @@
 @echo off
-REM Shukla Industrial — Start backend API (Windows)
-cd /d "%~dp0..\server"
-if not exist "venv\Scripts\activate.bat" (
-  echo Creating virtual environment...
-  python -m venv venv
+REM Start the Node.js / Express API (default http://localhost:8001)
+cd /d "%~dp0..\backend"
+if not exist ".env" (
+  echo Missing backend\.env — copy .env.example to .env and set DATABASE_URL
+  exit /b 1
 )
-call venv\Scripts\activate.bat
-pip install -r requirements.txt -q
-if not exist ".env" copy .env.example .env
-echo Starting API on http://localhost:8000
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+call npm run dev

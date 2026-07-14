@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-server/venv/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -27,13 +26,13 @@ Thumbs.db
 # Logs
 logs/
 *.log
-server/logs/
 npm-debug.log*
 
 # Uploads & generated
+backend/uploads/*
+!backend/uploads/.gitkeep
 server/uploads/*
 !server/uploads/.gitkeep
-server/static/generated/
 
 # Build output
 client/dist/
