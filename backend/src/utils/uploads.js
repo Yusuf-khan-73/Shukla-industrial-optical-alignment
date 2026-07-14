@@ -4,15 +4,33 @@ const { randomUUID } = require('crypto');
 const settings = require('../config/settings');
 const { AppError } = require('../middleware/errorHandler');
 
+/** Vercel (and Lambda) filesystems are read-only except /tmp. */
+function isEphemeralFs() {
+  return Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
+}
+
 function uploadRoot() {
-  return path.isAbsolute(settings.uploadDir)
-    ? settings.uploadDir
-    : path.resolve(__dirname, '../..', settings.uploadDir);
+  if (path.isAbsolute(settings.uploadDir)) {
+    return settings.uploadDir;
+  }
+  if (isEphemeralFs()) {
+    // Writable on serverless; files are ephemeral per instance — see DEPLOY_VERCEL.md
+    return path.posix.join('/tmp', settings.uploadDir || 'uploads');
+  }
+  return path.resolve(__dirname, '../..', settings.uploadDir);
 }
 
 function ensureUploadDir() {
   const root = uploadRoot();
-  fs.mkdirSync(root, { recursive: true });
+  try {
+    fs.mkdirSync(root, { recursive: true });
+  } catch (err) {
+    if (isEphemeralFs()) {
+      console.warn('ensureUploadDir failed on serverless (non-fatal):', err.message);
+      return root;
+    }
+    throw err;
+  }
   return root;
 }
 

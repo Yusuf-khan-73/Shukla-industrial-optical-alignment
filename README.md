@@ -70,6 +70,8 @@ npx prisma generate
 npm start
 ```
 
+**Vercel (serverless):** set the project Root Directory to `backend`, add env vars, and deploy. See [`backend/DEPLOY_VERCEL.md`](backend/DEPLOY_VERCEL.md). Local `npm run dev` / `npm start` still use `app.listen()` unchanged.
+
 Deploy on Render / Railway / Koyeb with env vars only (see `backend/.env.example`). Serve `client` build separately or reverse-proxy `/api` and `/uploads` to the Node service.
 
 ```powershell

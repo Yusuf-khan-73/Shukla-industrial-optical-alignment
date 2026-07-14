@@ -3,9 +3,23 @@
  * Location: client/src/utils/resolveImageUrl.js
  */
 
-const API_ORIGIN =
-  import.meta.env.VITE_API_ORIGIN
-  || (typeof window !== 'undefined' ? window.location.origin : '');
+function getApiOrigin() {
+  const base = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (base?.startsWith('http')) {
+    try {
+      return new URL(base).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+
+  const origin = import.meta.env.VITE_API_ORIGIN?.trim();
+  if (origin) return origin.replace(/\/$/, '');
+
+  return typeof window !== 'undefined' ? window.location.origin : '';
+}
+
+const API_ORIGIN = getApiOrigin();
 
 /**
  * @param {string|null|undefined} url

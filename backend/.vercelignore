@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+uploads/**
+!uploads/.gitkeep
+*.log
+.npm
+.DS_Store
+README.md
+DEPLOY_VERCEL.md
+scripts/**

@@ -1,6 +1,11 @@
 const path = require('path');
-const envPath = path.resolve(__dirname, '../../.env');
-require('dotenv').config({ path: envPath, override: true });
+
+// Local (`npm run dev`): .env overrides shell. On Vercel, platform env wins;
+// missing keys can still be filled from .env during `vercel dev`.
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env'),
+  override: !process.env.VERCEL,
+});
 
 function parseList(value = '') {
   return String(value)

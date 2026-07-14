@@ -4,6 +4,10 @@ const prisma = require('./prisma/client');
 const { ensureUploadDir } = require('./utils/uploads');
 const { runAllSeeds } = require('./services/seed');
 
+/**
+ * Local / traditional Node host entrypoint.
+ * Vercel uses api/index.js and never calls app.listen().
+ */
 async function bootstrap() {
   const dbUrl = settings.databaseUrl || '';
   const isPlaceholder =

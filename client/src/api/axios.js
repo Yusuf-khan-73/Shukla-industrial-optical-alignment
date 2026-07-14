@@ -5,7 +5,10 @@
 import axios from 'axios';
 
 /**
- * Resolve API base URL — dev uses direct backend (CORS) to avoid Vite proxy 404s.
+ * Resolve API base URL.
+ * - Absolute VITE_API_BASE_URL (https://…) wins in all environments.
+ * - DEV with relative base uses VITE_API_ORIGIN + /api/v1.
+ * - Production without absolute URL falls back to relative /api/v1 (same-host proxy).
  */
 const resolveApiBaseUrl = () => {
   const configured = import.meta.env.VITE_API_BASE_URL?.trim();

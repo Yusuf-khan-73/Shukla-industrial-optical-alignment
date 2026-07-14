@@ -38,12 +38,12 @@ export default defineConfig(({ mode }) => {
       open: false,
       proxy: {
         '/api': {
-          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8001',
           changeOrigin: true,
           secure: false,
         },
         '/uploads': {
-          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8001',
           changeOrigin: true,
           secure: false,
         },
@@ -85,12 +85,12 @@ export default defineConfig(({ mode }) => {
       host: true,
       proxy: {
         '/api': {
-          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8001',
           changeOrigin: true,
           secure: false,
         },
         '/uploads': {
-          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8000',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8001',
           changeOrigin: true,
           secure: false,
         },
