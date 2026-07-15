@@ -24,20 +24,25 @@ function senderAddress() {
 async function sendEmail(toEmail, subject, htmlBody, textBody) {
   console.info(`Sending email to: ${toEmail}`);
 
-  if (!settings.smtpHost || !settings.smtpUser || !settings.smtpPassword) {
-    console.warn('SMTP configuration missing');
+  const host = settings.smtpHost;
+  const user = settings.smtpUser;
+  // Gmail App Passwords are often shown with spaces — strip them.
+  const pass = String(settings.smtpPassword || '').replace(/\s+/g, '');
+
+  if (!host || !user || !pass) {
+    console.warn('SMTP configuration missing (SMTP_HOST / SMTP_USERNAME / SMTP_PASSWORD)');
     return false;
   }
 
   try {
     const transporter = nodemailer.createTransport({
-      host: settings.smtpHost,
+      host,
       port: settings.smtpPort,
-      secure: settings.smtpUseSsl,
+      secure: settings.smtpUseSsl, // false for port 587
       requireTLS: settings.smtpUseTls && !settings.smtpUseSsl,
       auth: {
-        user: settings.smtpUser,
-        pass: settings.smtpPassword,
+        user,
+        pass,
       },
       connectionTimeout: 30000,
       greetingTimeout: 30000,
@@ -55,7 +60,13 @@ async function sendEmail(toEmail, subject, htmlBody, textBody) {
     console.info(`Email sent successfully to: ${toEmail}`);
     return true;
   } catch (err) {
-    console.error('SMTP ERROR:', err);
+    // Do not log full error objects (may include auth payloads).
+    console.error(
+      'SMTP ERROR:',
+      err.code || 'SEND_FAILED',
+      err.responseCode || '',
+      err.message || 'unknown error'
+    );
     return false;
   }
 }
