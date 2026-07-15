@@ -81,7 +81,7 @@ Set these in **Vercel → Project → Settings → Environment Variables** (Prod
 
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `DATABASE_URL` | **Yes** | Postgres connection string. Prefer Supabase **pooler** (port `6543`) for serverless: `...?pgbouncer=true&schema=public` |
+| `DATABASE_URL` | **Yes** | Supabase **Transaction pooler** only (host `aws-0-<REGION>.pooler.supabase.com`, port `6543`, user `postgres.<PROJECT_REF>`). **Required query string:** `?pgbouncer=true&connection_limit=1&sslmode=require`. Do **not** use `db.<ref>.supabase.co:5432` on Vercel — that causes IPv6 issues and/or Postgres `42P05` with PgBouncer. |
 | `SECRET_KEY` | **Yes** | Long random JWT secret (not the example placeholder) |
 | `CORS_ORIGINS` | **Yes** | Comma-separated frontend origins, e.g. `https://your-app.vercel.app,https://www.example.com` |
 | `FRONTEND_URL` | **Yes** | Public frontend origin (password-reset links) |
