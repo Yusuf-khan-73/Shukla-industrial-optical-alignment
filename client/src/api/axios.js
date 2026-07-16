@@ -2,27 +2,30 @@
  * Shukla Industrial — Axios HTTP Client
  * Location: client/src/api/axios.js
  */
+
 import axios from 'axios';
 
 /**
  * Resolve API base URL.
- * - Absolute VITE_API_BASE_URL (https://…) wins in all environments.
- * - DEV with relative base uses VITE_API_ORIGIN + /api/v1.
- * - Production without absolute URL falls back to relative /api/v1 (same-host proxy).
+ *
+ * Production:
+ * VITE_API_ORIGIN + VITE_API_BASE_URL use karega.
+ *
+ * Example:
+ * https://shukla-industrial-backend-navy.vercel.app + /api/v1
+ *
+ * Result:
+ * https://shukla-industrial-backend-navy.vercel.app/api/v1
  */
 const resolveApiBaseUrl = () => {
-  const configured = import.meta.env.VITE_API_BASE_URL?.trim();
+  const origin = import.meta.env.VITE_API_ORIGIN?.trim();
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || '/api/v1';
 
-  if (configured?.startsWith('http')) {
-    return configured.replace(/\/$/, '');
+  if (origin) {
+    return `${origin.replace(/\/$/, '')}${baseUrl.startsWith('/') ? baseUrl : `/${baseUrl}`}`;
   }
 
-  if (import.meta.env.DEV) {
-    const origin = import.meta.env.VITE_API_ORIGIN?.trim() || 'http://localhost:8001';
-    return `${origin.replace(/\/$/, '')}/api/v1`;
-  }
-
-  return configured || '/api/v1';
+  return baseUrl;
 };
 
 const API_BASE_URL = resolveApiBaseUrl();
@@ -39,38 +42,58 @@ const apiClient = axios.create({
   },
 });
 
+
 // Request interceptor — attach JWT token if available
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('sioa_access_token');
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
+
 // Response interceptor — handle common errors
 apiClient.interceptors.response.use(
   (response) => response,
+
   (error) => {
     const status = error.response?.status;
     const requestUrl = error.config?.url || '';
-    const isAuthPublicRequest = /\/auth\/(login|forgot-password|reset-password|verify-reset-token)/.test(requestUrl);
-    const onAuthPage = /^\/(admin\/(login|forgot-password|reset-password)|reset-password)/.test(window.location.pathname);
+
+    const isAuthPublicRequest =
+      /\/auth\/(login|forgot-password|reset-password|verify-reset-token)/.test(
+        requestUrl
+      );
+
+    const onAuthPage =
+      /^\/(admin\/(login|forgot-password|reset-password)|reset-password)/.test(
+        window.location.pathname
+      );
+
 
     if (status === 401 && !isAuthPublicRequest) {
       localStorage.removeItem('sioa_access_token');
       localStorage.removeItem('sioa_admin_user');
-      if (window.location.pathname.startsWith('/admin') && !onAuthPage) {
+
+      if (
+        window.location.pathname.startsWith('/admin') &&
+        !onAuthPage
+      ) {
         window.location.href = '/admin/login';
       }
     }
 
+
     return Promise.reject(error);
   }
 );
+
 
 export { API_BASE_URL };
 export default apiClient;
