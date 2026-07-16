@@ -49,3 +49,4 @@ htmlcov/
 # OS
 *.tmp
 *.temp
+.vercel
