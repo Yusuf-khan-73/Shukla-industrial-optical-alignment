@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
+  justify-content: center;
   align-items: stretch;
   overflow: hidden;
   /* dvh accounts for mobile browser chrome; vh fallback */
@@ -25,22 +25,8 @@
 /* ── Background slider ─────────────────────────────────── */
 .hero__background {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   z-index: 0;
-  /* Pinned to the intended viewport slice (same formula as .hero__stage's
-     min-height) instead of `inset:0` (=100% of the stage's actual box).
-     .hero__stage's flex column has no explicit height, so on short mobile
-     viewports where .hero__body's stacked content is taller than the
-     viewport, the stage's real box grows to fit that content — and inset:0
-     would grow this background layer right along with it. Any percentage-
-     based child (e.g. .hero__slide-caption's `bottom: 18%`) is calculated
-     against that inflated height, so it lands far from the visual bottom of
-     the image, overlapping unrelated content lower on the page. Giving this
-     layer its own fixed height removes that dependency entirely. */
-  height: calc(100vh - var(--navbar-height));
-  height: calc(100dvh - var(--navbar-height));
 }
 
 .hero__swiper {
@@ -462,6 +448,20 @@
 
   .hero-stat {
     padding: var(--space-lg) var(--space-md);
+  }
+
+  /* .hero__slide-caption's `bottom: 18%` (base rule above) is calculated
+     against .hero__background's height, which mirrors .hero__stage's actual
+     box. .hero__stage is a flex column with only min-height (no explicit
+     height), so on mobile — where the stacked hero content can be taller
+     than the viewport — the stage's real box grows past the viewport and
+     the caption's 18% is measured against that taller number, landing the
+     pill mid-page instead of near the visual bottom of the photo. Switching
+     to `dvh` here anchors it to the actual device viewport instead, which
+     doesn't change regardless of content height. Scoped to mobile only —
+     desktop/tablet keep the original `%` rule untouched. */
+  .hero__slide-caption {
+    bottom: 18dvh;
   }
 }
 
