@@ -3,6 +3,7 @@
  * Location: client/src/components/Services/servicesData.js
  */
 import { industrialImage } from '@utils/industrialImages';
+import laserAlignmentConsultationImage from '@assets/images/laser-alignment-consultation.jpg';
 
 export const SERVICES_DATA = [
   {
@@ -209,7 +210,7 @@ export const SERVICES_DATA = [
       'Expert consultation on laser alignment systems, methodology, and best practices for your facility.',
     description:
       'Professional consultation services for laser alignment technology selection, methodology development, and team training. We advise on when to use laser vs optical alignment, help establish alignment procedures, and train your maintenance teams on precision alignment best practices.',
-    image: industrialImage(7),
+    image: laserAlignmentConsultationImage,
     imageAlt: 'Laser alignment consultation for industrial maintenance team',
     benefits: [
       'Alignment methodology and procedure development',

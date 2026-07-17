@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
   align-items: stretch;
   overflow: hidden;
   /* dvh accounts for mobile browser chrome; vh fallback */
