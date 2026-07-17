@@ -25,8 +25,22 @@
 /* ── Background slider ─────────────────────────────────── */
 .hero__background {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 0;
+  /* Pinned to the intended viewport slice (same formula as .hero__stage's
+     min-height) instead of `inset:0` (=100% of the stage's actual box).
+     .hero__stage's flex column has no explicit height, so on short mobile
+     viewports where .hero__body's stacked content is taller than the
+     viewport, the stage's real box grows to fit that content — and inset:0
+     would grow this background layer right along with it. Any percentage-
+     based child (e.g. .hero__slide-caption's `bottom: 18%`) is calculated
+     against that inflated height, so it lands far from the visual bottom of
+     the image, overlapping unrelated content lower on the page. Giving this
+     layer its own fixed height removes that dependency entirely. */
+  height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
 }
 
 .hero__swiper {
@@ -423,7 +437,12 @@
   }
 
   .hero__body {
-    padding: clamp(1.5rem, 4vw, 2rem) 0 var(--space-lg);
+    /* Top padding must never be smaller than the fixed navbar height, or the
+       badge/title can render underneath the navbar logo when the hero's
+       vertical centering has no slack left (short viewports / tall content
+       stacks). max() keeps the original clamp for the horizontal-space-driven
+       sizing while guaranteeing navbar clearance as a floor. */
+    padding: max(clamp(1.5rem, 4vw, 2rem), calc(var(--navbar-height) + 0.75rem)) 0 var(--space-lg);
   }
 
   .hero__actions {
