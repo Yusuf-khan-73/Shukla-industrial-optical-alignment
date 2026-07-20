@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { randomUUID } = require('crypto');
+const { createClient } = require('@supabase/supabase-js');
 const settings = require('../config/settings');
 const { AppError } = require('../middleware/errorHandler');
 
@@ -34,7 +35,60 @@ function ensureUploadDir() {
   return root;
 }
 
-function saveUploadBuffer(file, subfolder = 'images') {
+/**
+ * Supabase Storage is used when configured — files land in a durable bucket
+ * with a stable public URL, instead of Vercel's per-instance /tmp disk
+ * (where a file only exists on the one instance that handled the upload,
+ * so other instances 404 on it — the "random image missing on refresh" bug).
+ * Client is created lazily/once so a missing config doesn't crash at boot.
+ */
+let supabaseClient = null;
+function isSupabaseStorageConfigured() {
+  return Boolean(settings.supabaseUrl && settings.supabaseServiceRoleKey);
+}
+function getSupabaseClient() {
+  if (!supabaseClient) {
+    supabaseClient = createClient(settings.supabaseUrl, settings.supabaseServiceRoleKey);
+  }
+  return supabaseClient;
+}
+
+async function saveToSupabase(file, subfolder, filename) {
+  const objectPath = `${subfolder}/${filename}`;
+  const supabase = getSupabaseClient();
+
+  const { error: uploadError } = await supabase.storage
+    .from(settings.supabaseStorageBucket)
+    .upload(objectPath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false,
+    });
+
+  if (uploadError) {
+    throw new AppError(500, `Supabase upload failed: ${uploadError.message}`);
+  }
+
+  const { data } = supabase.storage
+    .from(settings.supabaseStorageBucket)
+    .getPublicUrl(objectPath);
+
+  if (!data?.publicUrl) {
+    throw new AppError(500, 'Supabase upload succeeded but no public URL was returned');
+  }
+
+  return data.publicUrl;
+}
+
+function saveToLocalDisk(file, subfolder, filename) {
+  const destDir = path.join(ensureUploadDir(), subfolder);
+  fs.mkdirSync(destDir, { recursive: true });
+  const destPath = path.join(destDir, filename);
+  fs.writeFileSync(destPath, file.buffer);
+
+  return `/uploads/${subfolder}/${filename}`;
+}
+
+async function saveUploadBuffer(file, subfolder = 'images') {
   if (!file) {
     throw new AppError(400, 'No file uploaded');
   }
@@ -53,12 +107,14 @@ function saveUploadBuffer(file, subfolder = 'images') {
 
   const ext = path.extname(file.originalname || 'image.jpg').toLowerCase() || '.jpg';
   const filename = `${randomUUID().replace(/-/g, '')}${ext}`;
-  const destDir = path.join(ensureUploadDir(), subfolder);
-  fs.mkdirSync(destDir, { recursive: true });
-  const destPath = path.join(destDir, filename);
-  fs.writeFileSync(destPath, file.buffer);
 
-  return `/uploads/${subfolder}/${filename}`;
+  if (isSupabaseStorageConfigured()) {
+    return saveToSupabase(file, subfolder, filename);
+  }
+
+  // Fallback: local disk (dev) or ephemeral /tmp (serverless without
+  // Supabase configured — still non-crashing, just not durable).
+  return saveToLocalDisk(file, subfolder, filename);
 }
 
 module.exports = {

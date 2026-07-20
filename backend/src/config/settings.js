@@ -38,6 +38,13 @@ const settings = {
   ),
   allowedImageTypesRaw:
     process.env.ALLOWED_IMAGE_TYPES || 'image/jpeg,image/png,image/webp,image/gif',
+  // Supabase Storage — used for durable image uploads instead of local/tmp
+  // disk (which is ephemeral and per-instance on Vercel serverless).
+  // If SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are not set, uploads.js
+  // automatically falls back to local/tmp disk (dev-friendly default).
+  supabaseUrl: process.env.SUPABASE_URL || '',
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  supabaseStorageBucket: process.env.SUPABASE_STORAGE_BUCKET || 'uploads',
   adminEmail: process.env.ADMIN_EMAIL || '',
   adminPassword: process.env.ADMIN_PASSWORD || '',
   frontendUrl: (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, ''),
