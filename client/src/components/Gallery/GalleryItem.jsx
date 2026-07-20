@@ -7,8 +7,23 @@ import { motion } from 'framer-motion';
 import { formatDate } from '@utils/formatters';
 import { resolveImageUrl } from '@utils/resolveImageUrl';
 
+// Inline SVG fallback — cannot itself fail to load (no network request), so
+// if a photo's real URL 404s or is unreachable in production, the card
+// always shows *something* instead of a permanent blank skeleton.
+const FALLBACK_IMAGE = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">'
+  + '<rect width="400" height="300" fill="#eceef2"/>'
+  + '<g fill="none" stroke="#b7bfc9" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">'
+  + '<rect x="60" y="70" width="280" height="180" rx="8"/>'
+  + '<circle cx="130" cy="130" r="16" fill="#b7bfc9" stroke="none"/>'
+  + '<path d="M70 220l80-70 60 50 40-35 80 65"/>'
+  + '</g>'
+  + '</svg>',
+)}`;
+
 const GalleryItem = ({ item, index = 0, onClick }) => {
   const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
   const imageUrl = resolveImageUrl(
     item.image?.url,
     item.updated_at || item.updatedAt || item.id,
@@ -16,6 +31,8 @@ const GalleryItem = ({ item, index = 0, onClick }) => {
   const imageAlt = item.image?.alt || item.title;
 
   if (!imageUrl) return null;
+
+  const src = errored ? FALLBACK_IMAGE : imageUrl;
 
   return (
     <motion.article
@@ -34,12 +51,20 @@ const GalleryItem = ({ item, index = 0, onClick }) => {
         <div className={`gallery-item__image ${loaded ? 'gallery-item__image--loaded' : ''}`}>
           {!loaded && <div className="gallery-item__skeleton img-skeleton" aria-hidden="true" />}
           <img
-            src={imageUrl}
+            src={src}
             alt={imageAlt}
             className="img-cover"
             loading="lazy"
             decoding="async"
             onLoad={() => setLoaded(true)}
+            onError={() => {
+              // Real photo failed (404 / wrong origin / unreachable) — stop
+              // waiting on onLoad (which will never fire for a failed
+              // request), swap to the local fallback graphic, and clear the
+              // skeleton so the card doesn't stay blank forever.
+              setErrored(true);
+              setLoaded(true);
+            }}
           />
           <div className="gallery-item__overlay">
             <span className="gallery-item__zoom">

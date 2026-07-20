@@ -31,6 +31,13 @@ export const resolveImageUrl = (url, version = null) => {
   let resolved = url.trim();
   if (!resolved) return null;
 
+  // Some records are saved without the leading slash (e.g. "uploads/x.jpg"
+  // instead of "/uploads/x.jpg") — normalize so the check below still catches
+  // it instead of leaving it as an unresolved relative path.
+  if (/^uploads\//i.test(resolved)) {
+    resolved = `/${resolved}`;
+  }
+
   if (resolved.startsWith('/uploads/')) {
     const origin = API_ORIGIN || (typeof window !== 'undefined' ? window.location.origin : '');
     resolved = `${origin}${resolved}`;
