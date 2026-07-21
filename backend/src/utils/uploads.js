@@ -55,28 +55,41 @@ function getSupabaseClient() {
 
 async function saveToSupabase(file, subfolder, filename) {
   const objectPath = `${subfolder}/${filename}`;
+
+  console.log("===== SUPABASE DEBUG =====");
+  console.log("SUPABASE_URL:", settings.supabaseUrl);
+  console.log("BUCKET:", settings.supabaseStorageBucket);
+  console.log("OBJECT PATH:", objectPath);
+  console.log("FILE:", file.originalname);
+  console.log("MIME:", file.mimetype);
+
   const supabase = getSupabaseClient();
 
-  const { error: uploadError } = await supabase.storage
+  const { data, error: uploadError } = await supabase.storage
     .from(settings.supabaseStorageBucket)
     .upload(objectPath, file.buffer, {
       contentType: file.mimetype,
       upsert: false,
     });
 
+  console.log("UPLOAD DATA:", data);
+  console.log("UPLOAD ERROR:", uploadError);
+
   if (uploadError) {
     throw new AppError(500, `Supabase upload failed: ${uploadError.message}`);
   }
 
-  const { data } = supabase.storage
+  const { data: publicData } = supabase.storage
     .from(settings.supabaseStorageBucket)
     .getPublicUrl(objectPath);
 
-  if (!data?.publicUrl) {
-    throw new AppError(500, 'Supabase upload succeeded but no public URL was returned');
+  console.log("PUBLIC URL:", publicData);
+
+  if (!publicData?.publicUrl) {
+    throw new AppError(500, "No public URL returned");
   }
 
-  return data.publicUrl;
+  return publicData.publicUrl;
 }
 
 function saveToLocalDisk(file, subfolder, filename) {
